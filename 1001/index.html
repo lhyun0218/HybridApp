@@ -1,0 +1,605 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+	<title>Samsung Electronics - Innovation Never Stops</title>
+	<link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css"/>
+	<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+	<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+<style>
+   :root {
+       --samsung-blue: #1428A0;
+       --samsung-dark-blue: #0c1a6b;
+       --samsung-light-blue: #2e5cff;
+       --samsung-gray: #f8f9fa;
+   }
+   
+   body { 
+       font-family: 'SamsungOne', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+       background: var(--samsung-gray);
+   }
+   
+   li { list-style:none; }
+   
+   .picture { list-style:none; padding:0; margin:0; }
+   .picture li { float:left; width:50%; box-sizing: border-box;}
+   .picture li a {
+       display:block; 
+       margin:5px; 
+       border: 2px solid #e0e0e0; 
+       border-radius: 12px; 
+       overflow: hidden;
+       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+       transition: all 0.3s ease;
+   }
+   .picture li a:hover {
+       transform: translateY(-5px);
+       box-shadow: 0 8px 20px rgba(20,40,160,0.3);
+       border-color: var(--samsung-blue);
+   }
+   .picture li img { 
+       display:block; 
+       width:100%; 
+       height:auto; 
+       transition: transform 0.4s ease;
+   }
+   .picture li img:hover { 
+       transform: scale(1.1);
+   }
+   
+   .samsung-hero {
+       background: linear-gradient(135deg, #1428A0 0%, #0c1a6b 50%, #000428 100%);
+       padding: 30px 20px;
+       text-align: center;
+       position: relative;
+       overflow: hidden;
+   }
+   
+   .samsung-hero::before {
+       content: '';
+       position: absolute;
+       top: -50%;
+       left: -50%;
+       width: 200%;
+       height: 200%;
+       background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+       animation: pulse 8s ease-in-out infinite;
+   }
+   
+   @keyframes pulse {
+       0%, 100% { transform: scale(1); opacity: 0.5; }
+       50% { transform: scale(1.2); opacity: 0.8; }
+   }
+   
+   .samsung-hero h1 {
+       color: white;
+       font-size: 2.5em;
+       margin: 0;
+       font-weight: 700;
+       letter-spacing: 12px;
+       text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+       position: relative;
+       z-index: 1;
+   }
+   
+   .samsung-hero p {
+       color: rgba(255,255,255,0.9);
+       font-size: 1.1em;
+       margin: 10px 0 0 0;
+       position: relative;
+       z-index: 1;
+   }
+   
+   .animated-logo {
+       animation: float 3s ease-in-out infinite;
+   }
+   
+   @keyframes float {
+       0%, 100% { transform: translateY(0px); }
+       50% { transform: translateY(-10px); }
+   }
+   
+   .product-card {
+       background: white;
+       border-radius: 16px;
+       padding: 20px;
+       margin: 15px 0;
+       box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+       transition: all 0.3s ease;
+       border-left: 4px solid var(--samsung-blue);
+   }
+   
+   .product-card:hover {
+       transform: translateX(5px);
+       box-shadow: 0 8px 24px rgba(20,40,160,0.15);
+   }
+   
+   .product-card h4 {
+       color: var(--samsung-blue);
+       margin-top: 0;
+       font-size: 1.3em;
+       display: flex;
+       align-items: center;
+       gap: 10px;
+   }
+   
+   .product-card .icon {
+       font-size: 1.5em;
+   }
+   
+   .video-container {
+       position: relative;
+       padding-bottom: 56.25%;
+       height: 0;
+       overflow: hidden;
+       border-radius: 12px;
+       box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+   }
+   
+   .video-container iframe {
+       position: absolute;
+       top: 0;
+       left: 0;
+       width: 100%;
+       height: 100%;
+       border: none;
+   }
+   
+   .stat-box {
+       background: linear-gradient(135deg, var(--samsung-blue) 0%, var(--samsung-dark-blue) 100%);
+       color: white;
+       padding: 25px;
+       border-radius: 16px;
+       margin: 15px 0;
+       text-align: center;
+       box-shadow: 0 8px 24px rgba(20,40,160,0.3);
+       transition: transform 0.3s ease;
+   }
+   
+   .stat-box:hover {
+       transform: scale(1.05);
+   }
+   
+   .stat-box h3 {
+       margin: 0;
+       font-size: 2.2em;
+       font-weight: bold;
+       text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+   }
+   
+   .stat-box p {
+       margin: 8px 0 0 0;
+       opacity: 0.95;
+       font-size: 1.1em;
+   }
+   
+   .timeline-item {
+       background: white;
+       border-radius: 12px;
+       padding: 20px;
+       margin: 15px 0;
+       border-left: 5px solid var(--samsung-blue);
+       box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+   }
+   
+   .timeline-item h4 {
+       color: var(--samsung-blue);
+       margin: 0 0 10px 0;
+       font-size: 1.2em;
+   }
+   
+   .feature-grid {
+       display: grid;
+       grid-template-columns: repeat(2, 1fr);
+       gap: 15px;
+       margin: 20px 0;
+   }
+   
+   .feature-item {
+       background: white;
+       padding: 20px;
+       border-radius: 12px;
+       text-align: center;
+       box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+       transition: all 0.3s ease;
+   }
+   
+   .feature-item:hover {
+       transform: translateY(-5px);
+       box-shadow: 0 8px 20px rgba(20,40,160,0.2);
+   }
+   
+   .feature-item i {
+       font-size: 2.5em;
+       color: var(--samsung-blue);
+       margin-bottom: 10px;
+   }
+   
+   .innovation-badge {
+       display: inline-block;
+       background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+       color: #000;
+       padding: 8px 16px;
+       border-radius: 20px;
+       font-weight: bold;
+       font-size: 0.9em;
+       margin: 10px 0;
+       box-shadow: 0 4px 12px rgba(255,215,0,0.3);
+   }
+   
+   .contact-card {
+       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+       color: white;
+       padding: 25px;
+       border-radius: 16px;
+       margin: 15px 0;
+       box-shadow: 0 8px 24px rgba(102,126,234,0.3);
+   }
+   
+   .contact-card h4 {
+       color: white;
+       margin-top: 0;
+       display: flex;
+       align-items: center;
+       gap: 10px;
+   }
+   
+   .contact-card a {
+       color: white;
+       text-decoration: underline;
+   }
+   
+   .ui-btn {
+       transition: all 0.3s ease;
+   }
+   
+   .ui-btn:hover {
+       transform: scale(1.05);
+   }
+   
+   .news-ticker {
+       background: linear-gradient(90deg, var(--samsung-blue) 0%, var(--samsung-light-blue) 100%);
+       color: white;
+       padding: 12px;
+       text-align: center;
+       font-size: 0.95em;
+       animation: slideIn 1s ease-out;
+   }
+   
+   @keyframes slideIn {
+       from { opacity: 0; transform: translateY(-20px); }
+       to { opacity: 1; transform: translateY(0); }
+   }
+   
+   .achievement-badge {
+       display: inline-flex;
+       align-items: center;
+       gap: 8px;
+       background: white;
+       padding: 10px 16px;
+       border-radius: 25px;
+       margin: 5px;
+       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+       font-size: 0.9em;
+   }
+   
+   .achievement-badge i {
+       color: #FFD700;
+       font-size: 1.2em;
+   }
+</style>
+</head>
+
+<body>
+<div data-theme="b">
+	<!-- 홈 페이지 -->
+	<div data-role="page" id="home">
+		<div data-role="header" data-theme="b" class="samsung-hero">
+			<h1>SAMSUNG</h1>
+			<p>Innovation Never Stops</p>
+		</div>
+		<div data-role="content" style="text-align:center; background: var(--samsung-gray);">
+			<div class="news-ticker">
+				<i class="fas fa-star"></i> Galaxy S24 Series - AI의 새로운 시대 <i class="fas fa-star"></i>
+			</div>
+			
+			<div style="padding: 30px 20px;">
+				<img src="https://images.samsung.com/is/image/samsung/assets/global/about-us/brand/logo/mo/360_197_1.png?$FB_TYPE_A_PNG$" 
+				     class="animated-logo"
+				     style="max-width: 400px; margin: 20px auto;" alt="Samsung Logo">
+				<p style="color: #666; margin: 20px 0; font-size: 1.1em;">
+					<strong>세계를 선도하는 기술 혁신 기업</strong><br/>
+					<span style="font-size: 0.9em;">Inspire the World, Create the Future</span>
+				</p>
+				
+				<div class="achievement-badge">
+					<i class="fas fa-trophy"></i>
+					<span>세계 1위 스마트폰</span>
+				</div>
+				<div class="achievement-badge">
+					<i class="fas fa-trophy"></i>
+					<span>세계 1위 반도체</span>
+				</div>
+				<div class="achievement-badge">
+					<i class="fas fa-trophy"></i>
+					<span>글로벌 Top 5 브랜드</span>
+				</div>
+			</div>
+			
+			<ul data-role="listview" data-inset="true" style="margin: 20px 15px;">
+				<li data-icon="info"><a href="#intro"><i class="fas fa-building"></i> 회사 소개</a></li>
+				<li data-icon="star"><a href="#products"><i class="fas fa-mobile-alt"></i> 주요 제품</a></li>
+				<li data-icon="heart"><a href="#innovation"><i class="fas fa-lightbulb"></i> 혁신 기술</a></li>
+				<li data-icon="video"><a href="#media" data-rel="dialog"><i class="fas fa-play-circle"></i> 미디어</a></li>
+				<li data-icon="grid"><a href="#gallery"><i class="fas fa-images"></i> 갤러리</a></li>
+				<li data-icon="clock"><a href="#history"><i class="fas fa-history"></i> 연혁</a></li>
+				<li data-icon="location"><a href="#contact"><i class="fas fa-briefcase"></i> 채용 정보</a></li>
+			</ul>
+		</div>
+		<div data-role="footer" data-position="fixed" data-theme="b">
+			<h4 style="font-size: 0.9em;">Samsung Electronics | Inspire the World, Create the Future</h4>
+		</div>
+	</div>
+	
+	<!-- 회사 소개 -->
+	<div data-role="page" id="intro" data-theme="a">
+		<div data-role="header" data-theme="b">
+			<a href="#home" data-icon="home" data-direction="reverse">홈</a>			
+			<h1>회사 소개</h1>
+		</div>
+		<div data-role="content" style="background: var(--samsung-gray); padding: 15px;">
+			<div class="samsung-hero" style="border-radius: 16px; margin-bottom: 20px;">
+				<h2 style="color: white; margin: 0; font-size: 1.8em;">SAMSUNG ELECTRONICS</h2>
+				<p style="margin: 10px 0 0 0;">Global Leader in Technology</p>
+			</div>
+			
+			<div data-role="collapsible-set" data-theme="a" data-content-theme="a" data-inset="true">
+				<div data-role="collapsible" data-collapsed="false">
+					<h3><i class="fas fa-info-circle"></i> 기업 개요</h3>
+					<div class="product-card">
+						<p><strong>삼성전자</strong>는 1969년 설립된 대한민국의 대표적인 글로벌 전자기업입니다.</p>
+						<p>스마트폰, 반도체, 디스플레이, 가전제품 등 다양한 분야에서 세계 최고 수준의 기술력을 보유하고 있습니다.</p>
+						<p>전 세계 74개국에 지사를 두고 있으며, 약 27만 명의 임직원이 근무하고 있습니다.</p>
+						<div class="innovation-badge">
+							<i class="fas fa-medal"></i> Fortune 500 기업
+						</div>
+					</div>
+				</div>
+				
+				<div data-role="collapsible">
+					<h3><i class="fas fa-heart"></i> 핵심 가치</h3>
+					<div class="feature-grid">
+						<div class="feature-item">
+							<i class="fas fa-users"></i>
+							<h4>인재 제일</h4>
+							<p style="font-size: 0.9em;">최고의 인재와 기술</p>
+						</div>
+						<div class="feature-item">
+							<i class="fas fa-trophy"></i>
+							<h4>최고 지향</h4>
+							<p style="font-size: 0.9em;">끊임없는 혁신</p>
+						</div>
+						<div class="feature-item">
+							<i class="fas fa-handshake"></i>
+							<h4>상생 추구</h4>
+							<p style="font-size: 0.9em;">기업 시민 정신</p>
+						</div>
+						<div class="feature-item">
+							<i class="fas fa-balance-scale"></i>
+							<h4>정도 경영</h4>
+							<p style="font-size: 0.9em;">투명한 경영</p>
+						</div>
+					</div>
+				</div>
+				
+				<div data-role="collapsible">
+					<h3><i class="fas fa-chart-line"></i> 주요 실적 (2024)</h3>
+					<div class="stat-box">
+						<i class="fas fa-dollar-sign" style="font-size: 1.5em; margin-bottom: 10px;"></i>
+						<h3>302조원</h3>
+						<p>연간 매출액</p>
+					</div>
+					<div class="stat-box">
+						<i class="fas fa-mobile-alt" style="font-size: 1.5em; margin-bottom: 10px;"></i>
+						<h3>세계 1위</h3>
+						<p>스마트폰 시장 점유율 (20.1%)</p>
+					</div>
+					<div class="stat-box">
+						<i class="fas fa-microchip" style="font-size: 1.5em; margin-bottom: 10px;"></i>
+						<h3>세계 1위</h3>
+						<p>메모리 반도체 (40% 이상)</p>
+					</div>
+					<div class="stat-box">
+						<i class="fas fa-tv" style="font-size: 1.5em; margin-bottom: 10px;"></i>
+						<h3>17년 연속</h3>
+						<p>TV 시장 1위</p>
+					</div>
+				</div>
+				
+				<div data-role="collapsible">
+					<h3><i class="fas fa-globe"></i> 글로벌 네트워크</h3>
+					<div class="product-card">
+						<h4 class="icon">🌍 글로벌 사업장</h4>
+						<p><strong>74개국</strong>에 걸쳐 사업장 운영</p>
+						<p><strong>200여개</strong>의 지사 및 판매법인</p>
+						<p><strong>42개</strong>의 생산 거점</p>
+						<p><strong>37개</strong>의 R&D 센터</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div data-role="footer" data-position="fixed" data-theme="b">
+			<h4>Samsung Electronics</h4>
+		</div>		
+	</div>
+	
+	<!-- 주요 제품 -->
+	<div data-role="page" id="products" data-theme="a">
+		<div data-role="header" data-theme="b">
+			<a href="#home" data-icon="home" data-direction="reverse">홈</a>
+			<h1>주요 제품</h1>
+		</div>
+		<div data-role="content" style="background: var(--samsung-gray); padding: 15px;">
+			<div class="product-card">
+				<h4><span class="icon">📱</span> Galaxy 스마트폰</h4>
+				<div class="innovation-badge">2024 NEW</div>
+				<p><strong>Galaxy S24 Ultra</strong> - AI 통합 스마트폰</p>
+				<p><strong>Galaxy Z Fold6 / Z Flip6</strong> - 폴더블 혁신</p>
+				<p><strong>Galaxy A Series</strong> - 프리미엄 중급형</p>
+				<p style="color: #666; font-size: 0.95em; margin-top: 10px;">
+					200MP 카메라, Galaxy AI, S펜 내장, 5G/WiFi 7 지원
+				</p>
+			</div>
+			
+			<div class="product-card">
+				<h4><span class="icon">💻</span> Galaxy Book & Tab</h4>
+				<p><strong>Galaxy Book4 Ultra</strong> - 크리에이터용 노트북</p>
+				<p><strong>Galaxy Tab S9 Ultra</strong> - 14.6" 태블릿</p>
+				<p style="color: #666; font-size: 0.95em; margin-top: 10px;">
+					Intel Core Ultra / Snapdragon 8 Gen 3, DeX 모드 지원
+				</p>
+			</div>
+			
+			<div class="product-card">
+				<h4><span class="icon">⌚</span> Galaxy Wearables</h4>
+				<p><strong>Galaxy Watch7</strong> - 건강 관리 스마트워치</p>
+				<p><strong>Galaxy Buds3 Pro</strong> - 프리미엄 무선 이어폰</p>
+				<p><strong>Galaxy Ring</strong> - 스마트 링 (NEW)</p>
+				<p style="color: #666; font-size: 0.95em; margin-top: 10px;">
+					수면 분석, 심박수 모니터링, ANC 3.0 적용
+				</p>
+			</div>
+			
+			<div class="product-card">
+				<h4><span class="icon">📺</span> Neo QLED & OLED TV</h4>
+				<div class="innovation-badge">8K AI Upscaling</div>
+				<p><strong>Neo QLED 8K</strong> - Quantum Matrix Pro</p>
+				<p><strong>OLED S95D</strong> - 완벽한 블랙</p>
+				<p><strong>The Frame</strong> - 예술품 TV</p>
+				<p><strong>The Freestyle</strong> - 휴대용 프로젝터</p>
+			</div>
+			
+			<div class="product-card">
+				<h4><span class="icon">❄️</span> 비스포크 가전</h4>
+				<p><strong>비스포크 AI 냉장고</strong> - Family Hub+</p>
+				<p><strong>그랑데 AI 세탁기</strong> - 자동 세제 투입</p>
+				<p><strong>무풍에어컨</strong> - AI 온도 최적화</p>
+				<p><strong>제트 AI 청소기</strong> - 스스로 청소</p>
+				<p style="color: #666; font-size: 0.95em; margin-top: 10px;">
+					SmartThings AI 연동, 에너지 효율 A+++
+				</p>
+			</div>
+			
+			<div class="product-card">
+				<h4><span class="icon">💾</span> 반도체 솔루션</h4>
+				<p><strong>DRAM</strong> - DDR5, LPDDR5X, HBM3E</p>
+				<p><strong>NAND Flash</strong> - V-NAND 9세대, 1Tb</p>
+				<p><strong>시스템 반도체</strong> - Exynos, ISOCELL</p>
+				<p style="color: #666; font-size: 0.95em; margin-top: 10px;">
+					AI 가속기, 초저전력 설계, 3nm 공정 기술
+				</p>
+			</div>
+			
+			<div class="product-card">
+				<h4><span class="icon">🎮</span> Gaming & Display</h4>
+				<p><strong>Odyssey G9</strong> - 게이밍 모니터 (240Hz)</p>
+				<p><strong>ViewFinity</strong> - 전문가용 모니터 (5K)</p>
+				<p><strong>Smart Monitor M8</strong> - 올인원 모니터</p>
+			</div>
+		</div>
+		<div data-role="footer" data-position="fixed" data-theme="b">
+			<h4>Samsung Electronics</h4>
+		</div>
+	</div>
+	
+	<!-- 혁신 기술 (NEW) -->
+	<div data-role="page" id="innovation" data-theme="a">
+		<div data-role="header" data-theme="b">
+			<a href="#home" data-icon="home" data-direction="reverse">홈</a>
+			<h1>혁신 기술</h1>
+		</div>
+		<div data-role="content" style="background: var(--samsung-gray); padding: 15px;">
+			<div class="samsung-hero" style="border-radius: 16px; margin-bottom: 20px;">
+				<i class="fas fa-rocket" style="font-size: 3em; color: white; margin-bottom: 15px;"></i>
+				<h2 style="color: white; margin: 0;">Innovation Lab</h2>
+			</div>
+			
+			<div class="product-card">
+				<h4><i class="fas fa-brain"></i> Galaxy AI</h4>
+				<div class="innovation-badge">2024 핵심 기술</div>
+				<p><strong>실시간 통역</strong> - 33개 언어 지원</p>
+				<p><strong>사진 편집 AI</strong> - 생성형 편집 기능</p>
+				<p><strong>서클 투 서치</strong> - 원 그리면 검색</p>
+				<p><strong>노트 어시스트</strong> - AI 요약 및 번역</p>
+			</div>
+			
+			<div class="product-card">
+				<h4><i class="fas fa-microchip"></i> GAA 3nm 반도체</h4>
+				<p>게이트 올 어라운드(GAA) 기술로 성능 35% 향상</p>
+				<p>전력 소비 50% 감소</p>
+				<p>세계 최초 양산 성공</p>
+			</div>
+			
+			<div class="product-card">
+				<h4><i class="fas fa-wind"></i> 무풍 기술</h4>
+				<p>2만 3천개의 미세 공기구멍</p>
+				<p>직접 바람 없는 시원함</p>
+				<p>에너지 소비 10% 절감</p>
+			</div>
+			
+			<div class="product-card">
+				<h4><i class="fas fa-recycle"></i> 지속가능 경영</h4>
+				<p><strong>RE100</strong> - 2050년 재생에너지 100%</p>
+				<p><strong>재활용 소재</strong> - Galaxy 제품에 적용</p>
+				<p><strong>탄소 중립</strong> - 2030년 목표</p>
+			</div>
+			
+			<div class="feature-grid">
+				<div class="feature-item">
+					<i class="fas fa-shield-alt"></i>
+					<h4 style="font-size: 1em;">Knox Security</h4>
+					<p style="font-size: 0.85em;">군사급 보안</p>
+				</div>
+				<div class="feature-item">
+					<i class="fas fa-infinity"></i>
+					<h4 style="font-size: 1em;">SmartThings</h4>
+					<p style="font-size: 0.85em;">IoT 생태계</p>
+				</div>
+				<div class="feature-item">
+					<i class="fas fa-expand"></i>
+					<h4 style="font-size: 1em;">DeX</h4>
+					<p style="font-size: 0.85em;">PC 경험</p>
+				</div>
+				<div class="feature-item">
+					<i class="fas fa-wifi"></i>
+					<h4 style="font-size: 1em;">WiFi 7</h4>
+					<p style="font-size: 0.85em;">초고속 무선</p>
+				</div>
+			</div>
+		</div>
+		<div data-role="footer" data-position="fixed" data-theme="b">
+			<h4>Samsung Electronics</h4>
+		</div>
+	</div>
+	
+	<!-- 미디어 -->
+	<div data-role="page" id="media" data-theme="a">
+		<div data-role="header" data-theme="b">
+			<a href="#home" data-icon="home">홈</a>
+			<h1>미디어</h1>
+		</div>
+		<div data-role="content" style="background: var(--samsung-gray); padding: 15px;">
+			<div class="product-card">
+				<h4><i class="fas fa-play-circle"></i> Galaxy S24 Ultra 공식 영상</h4>
+				<div class="innovation-badge">Galaxy AI</div>
+				<div class="video-container">
+					<iframe src="https://www.youtube.com/embed/p4gNNM5klvY" 
+					        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+					        allowfullscreen></iframe>
+				</div>
+			</div>
+			
+			<div class="product-card">
+				<h4><i class="fas fa-building"></i> 삼성전자 기업 소개 영상</h4
