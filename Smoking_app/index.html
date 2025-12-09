@@ -1,0 +1,3936 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>금연 도우미 - 건강한 내일을 위한 첫걸음</title>
+    <meta name="description" content="금연을 도와주는 스마트한 앱으로 건강한 삶을 시작하세요">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="x5-orientation" content="portrait">
+    <style>
+        /* 여기에 앞에서 받은 CSS 전체를 넣으세요 */
+
+
+:root {
+    --primary: #6366f1;
+    --primary-dark: #4f46e5;
+    --primary-light: #818cf8;
+    --secondary: #8b5cf6;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --bg: #ffffff;
+    --bg-secondary: #f8fafc;
+    --surface: #ffffff;
+    --text: #1e293b;
+    --text-secondary: #64748b;
+    --border: #e2e8f0;
+    --shadow: rgba(0, 0, 0, 0.1);
+    --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    --gradient-glow: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+}
+
+[data-theme="dark"] {
+    --primary: #818cf8;
+    --primary-dark: #6366f1;
+    --primary-light: #a5b4fc;
+    --secondary: #a78bfa;
+    --success: #34d399;
+    --warning: #fbbf24;
+    --danger: #f87171;
+    --bg: #0f172a;
+    --bg-secondary: #1e293b;
+    --surface: #1e293b;
+    --text: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --border: #334155;
+    --shadow: rgba(0, 0, 0, 0.3);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    transition: all 0.3s ease;
+    overflow-x: hidden;
+    min-height: 100vh;
+    width: 100vw;
+}
+
+.app-container {
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background: var(--bg);
+    position: relative;
+    padding-bottom: 80px;
+    width: 100%;
+}
+
+.page {
+    display: none;
+    padding: 20px;
+    padding-top: 80px;
+    animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    scroll-behavior: smooth;
+}
+
+.page.active {
+    display: block;
+    animation: fadeInFromTop 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInFromTop {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+@keyframes slideTextLeft {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes iosCardFlyIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3) translateY(100vh) translateZ(-1000px);
+    }
+    60% {
+        opacity: 1;
+        transform: scale(1.05) translateY(-10px) translateZ(0);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0) translateZ(0);
+    }
+}
+
+@keyframes headerExpandFromCenter {
+    0% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(0) scaleY(0);
+        transform-origin: center top;
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0) scaleY(1);
+        transform-origin: center top;
+    }
+}
+
+@keyframes navExpandFromCenter {
+    0% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(0) scaleY(0);
+        transform-origin: center bottom;
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0) scaleY(1);
+        transform-origin: center bottom;
+    }
+}
+
+@keyframes celebrateIcon {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    25% { transform: scale(1.2) rotate(-10deg); }
+    50% { transform: scale(1.1) rotate(10deg); }
+    75% { transform: scale(1.2) rotate(-5deg); }
+}
+
+@keyframes pulse-danger {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.01); opacity: 0.95; }
+    100% { transform: scale(1); opacity: 1; }
+}
+.status-indicator {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--success);
+    z-index: 10;
+}
+
+.status-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--success);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    height: 70px;
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filte: blur(7px);
+    border-bottom: 1px solid rgba(226, 232, 240, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    box-shadow: 0 2px 15px var(--shadow);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.header.scrolled {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* 다크모드 */
+[data-theme="dark"] .header {
+    background: rgba(15, 23, 42, 0.7);
+    border-bottom: 1px solid rgba(51, 65, 85, 0.3);
+}
+
+[data-theme="dark"] .header.scrolled {
+    background: rgba(15, 23, 42, 0.95);
+    border-bottom: 1px solid rgba(51, 65, 85, 0.8);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* 아래로 스크롤 시 헤더 숨김 (선택사항) */
+.header.header-hide {
+    transform: translateX(-50%) translateY(-100%);
+}
+
+.header.hidden {
+    transform: translateX(-50%) translateY(-100%);
+}
+
+.header-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    transition: all 0.3s ease;
+}
+
+
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
+    border-top: 1px solid rgba(226, 232, 240, 0.3);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 100;
+    padding: 0 10px;
+    box-shadow: 0 -2px 15px var(--shadow);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 스크롤 시 바텀 네비게이션도 진하게 */
+.header.scrolled ~ .bottom-nav {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(226, 232, 240, 0.8);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="dark"] .bottom-nav {
+    background: rgba(15, 23, 42, 0.7);
+    border-top: 1px solid rgba(51, 65, 85, 0.3);
+}
+
+[data-theme="dark"] .header.scrolled ~ .bottom-nav {
+    background: rgba(15, 23, 42, 0.95);
+    border-top: 1px solid rgba(51, 65, 85, 0.8);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.bottom-nav.hidden {
+    transform: translateX(-50%) translateY(100%);
+}
+.nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    padding: 10px 8px;
+    border-radius: 16px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    color: var(--text-secondary);
+    position: relative;
+}
+
+.nav-item:hover {
+    transform: translateY(-2px);
+}
+
+.nav-item.active {
+    color: var(--primary);
+    background: var(--gradient-glow);
+    transform: scale(1.05);
+}
+
+.nav-icon {
+    font-size: 24px;
+    transition: all 0.3s ease;
+}
+
+.nav-item.active .nav-icon {
+    transform: scale(1.1);
+}
+
+.nav-label {
+    font-size: clamp(9px, 2.5vw, 11px);
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.welcome-screen {
+    text-align: center;
+    padding: 40px 20px;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: var(--gradient-glow);
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    touch-action: none;
+}
+
+.welcome-icon {
+    font-size: clamp(70px, 20vw, 100px);
+    margin-bottom: 30px;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    25% { transform: translateY(-10px) rotate(2deg); }
+    50% { transform: translateY(-15px) rotate(0deg); }
+    75% { transform: translateY(-10px) rotate(-2deg); }
+}
+
+.welcome-title {
+    font-size: clamp(28px, 8vw, 36px);
+    font-weight: 900;
+    margin-bottom: 20px;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: slideIn 0.8s ease 0.3s both;
+}
+
+.welcome-subtitle {
+    font-size: clamp(14px, 4vw, 18px);
+    color: var(--text-secondary);
+    line-height: 1.8;
+    margin-bottom: 50px;
+    animation: slideIn 0.8s ease 0.6s both;
+}
+
+.risk-display-page {
+    text-align: center;
+    padding: 40px 20px;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: var(--gradient-glow);
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow: auto;
+    touch-action: pan-y;
+    box-sizing: border-box;
+    z-index: 100;
+}
+
+.risk-title {
+    font-size: clamp(24px, 7vw, 32px);
+    font-weight: 900;
+    margin-bottom: 20px;
+    color: var(--text);
+    text-align: center;
+}
+
+.risk-stats {
+    background: var(--surface);
+    border-radius: 24px;
+    padding: 30px;
+    margin: 30px 0;
+    box-shadow: 0 8px 30px var(--shadow);
+    max-width: 400px;
+    width: 100%;
+}
+
+.risk-stat-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.risk-stat-item:last-child {
+    border-bottom: none;
+}
+
+.risk-stat-label {
+    font-size: clamp(14px, 3.5vw, 16px);
+    color: var(--text-secondary);
+}
+
+.risk-stat-value {
+    font-size: clamp(16px, 4vw, 20px);
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.risk-level-badge {
+    display: inline-block;
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: clamp(16px, 4vw, 20px);
+    font-weight: 800;
+    margin: 20px 0;
+}
+
+.risk-level-high {
+    background: rgba(239, 68, 68, 0.2);
+    color: var(--danger);
+}
+
+.risk-level-medium {
+    background: rgba(245, 158, 11, 0.2);
+    color: var(--warning);
+}
+
+.risk-level-low {
+    background: rgba(16, 185, 129, 0.2);
+    color: var(--success);
+}
+
+.motivation-card {
+    background: var(--gradient-glow);
+    border: 1px solid var(--primary);
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.motivation-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(99, 102, 241, 0.1), transparent);
+    animation: shimmer 3s infinite;
+}
+
+.motivation-text {
+    font-size: clamp(14px, 4vw, 18px);
+    font-weight: 700;
+    color: var(--primary);
+    position: relative;
+    z-index: 1;
+    animation: slideTextLeft 0.5s ease-in-out;
+}
+
+.card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 20px var(--shadow);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px var(--shadow);
+}
+
+.card-title {
+    font-size: clamp(14px, 3.5vw, 16px);
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--text);
+}
+
+.card-value {
+    font-size: clamp(24px, 6vw, 32px);
+    font-weight: 900;
+    color: var(--primary);
+    margin: 12px 0;
+}
+
+.card-label {
+    font-size: clamp(12px, 3vw, 14px);
+    color: var(--text-secondary);
+}
+.form-group {
+    margin-bottom: 24px;
+    animation: slideIn 0.6s ease;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--text);
+    font-weight: 600;
+    font-size: 15px;
+}
+
+input, select {
+    width: 100%;
+    padding: 16px 18px;
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    font-size: 16px;
+    background: var(--surface);
+    color: var(--text);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+    transform: translateY(-2px);
+}
+
+.checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    background: var(--bg-secondary);
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.checkbox-label:hover {
+    border-color: var(--primary);
+    background: var(--surface);
+    transform: translateY(-2px);
+}
+
+.checkbox-label input:checked + span {
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.checkbox-label input {
+    width: auto;
+    margin-right: 10px;
+}
+
+.btn {
+    width: 100%;
+    padding: 18px;
+    background: var(--gradient-primary);
+    color: white;
+    border: none;
+    border-radius: 16px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(99, 102, 241, 0.4);
+}
+
+.btn:active {
+    transform: translateY(-1px);
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+.level-card {
+    background: var(--gradient-primary);
+    color: white;
+    border-radius: 24px;
+    padding: 36px;
+    text-align: center;
+    margin-bottom: 24px;
+    box-shadow: 0 12px 40px rgba(99, 102, 241, 0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+.level-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    animation: shimmer 4s infinite;
+}
+
+.level-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.25);
+    padding: 8px 16px;
+    border-radius: 25px;
+    font-size: 13px;
+    font-weight: 700;
+    backdrop-filter: blur(10px);
+}
+
+.level-number {
+    font-size: clamp(56px, 15vw, 72px);
+    font-weight: 900;
+    margin: 15px 0;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 1;
+}
+
+.level-title {
+    font-size: clamp(18px, 5vw, 22px);
+    font-weight: 700;
+    margin-bottom: 20px;
+    opacity: 0.95;
+    position: relative;
+    z-index: 1;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+.progress-fill {
+    height: 100%;
+    background: white;
+    border-radius: 4px;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.stats-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: clamp(8px, 2vw, 16px);
+    margin-bottom: 24px;
+}
+
+.stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: clamp(12px, 3vw, 20px);
+    padding: clamp(12px, 3vw, 24px);
+    text-align: center;
+    box-shadow: 0 4px 20px var(--shadow);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    min-height: 110px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.stat-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 12px 35px var(--shadow);
+}
+
+.stat-icon {
+    font-size: clamp(24px, 6vw, 32px);
+    margin-bottom: clamp(6px, 1.5vw, 12px);
+}
+
+.stat-value {
+    font-size: clamp(20px, 5vw, 28px);
+    font-weight: 900;
+    color: var(--primary);
+    margin: clamp(4px, 1.5vw, 12px) 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 4px;
+}
+
+.stat-label {
+    font-size: clamp(10px, 2.5vw, 13px);
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.progress-summary {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.progress-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.progress-item:last-child {
+    border-bottom: none;
+}
+
+.progress-label {
+    font-size: clamp(12px, 3vw, 14px);
+    color: var(--text-secondary);
+}
+
+.progress-value {
+    font-size: clamp(14px, 3.5vw, 16px);
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.level-preview {
+    background: var(--gradient-glow);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 24px;
+}
+
+.level-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.current-level {
+    font-size: clamp(14px, 4vw, 18px);
+    font-weight: 700;
+    color: var(--primary);
+    white-space: nowrap;
+}
+
+.next-level {
+    font-size: clamp(11px, 3vw, 14px);
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.level-progress-mini {
+    width: 100%;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.level-progress-fill-mini {
+    height: 100%;
+    background: var(--gradient-primary);
+    border-radius: 3px;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.time-display {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 28px;
+    text-align: center;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 20px var(--shadow);
+    position: relative;
+}
+
+.time-value {
+    font-size: clamp(24px, 6vw, 36px);
+    font-weight: 900;
+    color: var(--primary);
+    margin: 12px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 8px;
+}
+
+.daily-quote {
+    background: var(--gradient-glow);
+    border: 1px solid var(--primary);
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.daily-quote::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(99, 102, 241, 0.1), transparent);
+    animation: shimmer 3s infinite;
+}
+
+.quote-text {
+    font-size: clamp(13px, 3.5vw, 16px);
+    font-weight: 600;
+    color: var(--primary);
+    position: relative;
+    z-index: 1;
+    line-height: 1.6;
+    margin-bottom: 12px;
+}
+
+.quote-author {
+    font-size: clamp(12px, 3vw, 14px);
+    color: var(--text-secondary);
+    position: relative;
+    z-index: 1;
+}
+
+.past-smoking-card {
+    background: var(--gradient-glow);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 24px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.past-smoking-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px var(--shadow);
+}
+
+.past-smoking-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.past-smoking-icon {
+    font-size: 24px;
+}
+
+.past-smoking-title {
+    font-size: clamp(14px, 3.5vw, 16px);
+    font-weight: 700;
+    color: var(--text);
+}
+
+.past-smoking-info {
+    font-size: clamp(12px, 3vw, 14px);
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.past-smoking-section {
+    background: var(--gradient-glow);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.section-header {
+    font-size: clamp(16px, 4.5vw, 20px);
+    font-weight: 800;
+    margin-bottom: 20px;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.danger-level {
+    margin-top: 15px;
+    padding: 10px 15px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 1px solid var(--border);
+    line-height: 1.4;
+    color: var(--text-secondary);
+}
+
+.danger-low {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: var(--success) !important;
+    border-color: var(--success);
+}
+
+.danger-medium {
+    background-color: rgba(245, 158, 11, 0.1);
+    color: var(--warning) !important;
+    border-color: var(--warning);
+}
+
+.danger-high {
+    background-color: rgba(239, 68, 68, 0.15);
+    color: var(--danger) !important;
+    border-color: var(--danger);
+    animation: pulse-danger 1.5s infinite;
+}
+.achievement-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.achievement-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px var(--shadow);
+}
+
+.achievement-item.completed {
+    border-color: var(--success);
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(16, 185, 129, 0.1) 100%);
+}
+
+.achievement-item.locked {
+    opacity: 0.6;
+}
+
+.achievement-icon {
+    font-size: clamp(32px, 8vw, 40px);
+    flex-shrink: 0;
+}
+
+.achievement-content {
+    flex: 1;
+}
+
+.achievement-title {
+    font-size: clamp(14px, 3.5vw, 16px);
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: var(--text);
+}
+
+.achievement-desc {
+    font-size: clamp(12px, 3vw, 14px);
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.achievement-progress {
+    width: 100%;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 12px;
+}
+
+.achievement-progress-fill {
+    height: 100%;
+    background: var(--gradient-primary);
+    border-radius: 3px;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.savings-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.savings-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px var(--shadow);
+}
+
+.savings-item.unlocked {
+    border-color: var(--success);
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(16, 185, 129, 0.1) 100%);
+}
+
+.savings-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+
+.savings-emoji {
+    font-size: clamp(28px, 7vw, 36px);
+}
+
+.savings-info {
+    flex: 1;
+}
+
+.savings-name {
+    font-size: clamp(14px, 3.5vw, 16px);
+    font-weight: 700;
+    color: var(--text);
+}
+
+.savings-price {
+    font-size: clamp(12px, 3vw, 14px);
+    color: var(--text-secondary);
+}
+
+.savings-progress-bar {
+    width: 100%;
+    height: 8px;
+    background: var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.savings-progress-fill {
+    height: 100%;
+    background: var(--gradient-primary);
+    border-radius: 4px;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.savings-percent {
+    text-align: right;
+    font-size: clamp(11px, 3vw, 13px);
+    font-weight: 700;
+    color: var(--primary);
+    margin-top: 8px;
+}
+
+.achievement-notification-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 1999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.achievement-notification-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.achievement-notification {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    max-width: 90%;
+    width: 400px;
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(226, 232, 240, 0.3);
+    border-radius: 28px;
+    padding: 40px 30px;
+    text-align: center;
+    z-index: 2000;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+[data-theme="dark"] .achievement-notification {
+    background: rgba(15, 23, 42, 0.75);
+    border: 1px solid rgba(51, 65, 85, 0.3);
+}
+.achievement-notification.show {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+}
+
+.achievement-notification-icon {
+    font-size: 80px;
+    margin-bottom: 20px;
+    animation: celebrateIcon 0.8s ease;
+}
+
+.achievement-notification-title {
+    font-size: 24px;
+    font-weight: 900;
+    color: var(--primary);
+    margin-bottom: 12px;
+}
+
+.achievement-notification-desc {
+    font-size: 16px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 24px;
+}
+
+.achievement-notification-btn {
+    width: 100%;
+    padding: 16px;
+    background: var(--gradient-primary);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.achievement-notification-btn:active {
+    transform: scale(0.95);
+}
+
+.settings-section {
+    margin-bottom: 36px;
+}
+
+.settings-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.settings-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.settings-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px var(--shadow);
+}
+
+.settings-item:active {
+    transform: scale(0.98);
+}
+
+.settings-info {
+    flex: 1;
+}
+
+.settings-label {
+    font-size: clamp(14px, 3.5vw, 16px);
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+}
+
+.settings-value {
+    font-size: clamp(12px, 3vw, 14px);
+    color: var(--text-secondary);
+}
+
+.toggle-switch {
+    width: 56px;
+    height: 32px;
+    background: var(--border);
+    border-radius: 16px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.toggle-switch.active {
+    background: var(--primary);
+}
+
+.toggle-knob {
+    width: 28px;
+    height: 28px;
+    background: white;
+    border-radius: 14px;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-switch.active .toggle-knob {
+    transform: translateX(24px);
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(226, 232, 240, 0.3);
+    border-radius: 24px;
+    padding: clamp(20px, 5vw, 36px);
+    max-width: min(400px, 90vw);
+    max-height: 85vh;
+    overflow-y: auto;
+    width: 100%;
+    text-align: center;
+    animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .modal-content {
+    background: rgba(15, 23, 42, 0.75);
+    border: 1px solid rgba(51, 65, 85, 0.3);
+}
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(40px) scale(0.9); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.modal-title {
+    font-size: clamp(16px, 4.5vw, 22px);
+    font-weight: 700;
+    margin-bottom: clamp(12px, 3vw, 16px);
+    color: var(--text);
+    line-height: 1.3;
+}
+
+.modal-text {
+    font-size: clamp(12px, 3.2vw, 15px);
+    color: var(--text-secondary);
+    margin-bottom: clamp(16px, 4vw, 28px);
+    line-height: 1.5;
+    max-height: 55vh;
+    overflow-y: auto;
+}
+.modal-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+/* 기존 .modal-btn 찾아서 수정 */
+.modal-btn {
+    flex: 1;
+    
+    padding: clamp(12px, 3vw, 16px);
+    border: none;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    border-radius: 12px;
+    font-size: clamp(13px, 3.5vw, 15px);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    min-height: 44px;
+}
+
+.modal-btn:hover {
+    transform: translateY(-2px);
+}
+
+.modal-btn-cancel {
+    background: var(--bg-secondary);
+    color: var(--text);
+}
+
+.modal-btn-confirm {
+    background: var(--gradient-primary);
+    color: white;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+}
+
+/* Modal 텍스트 영역 최대 높이 설정 */
+.modal-text {
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+/* 스크롤바 스타일 */
+.modal-text::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modal-text::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+    border-radius: 3px;
+}
+
+.modal-text::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 3px;
+}
+
+
+/* SOS Button */
+.sos-button-container {
+    margin-bottom: 24px;
+}
+
+.sos-button {
+    width: 100%;
+    padding: 24px;
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    position: relative;
+    overflow: hidden;
+}
+
+.sos-button::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    animation: shimmer 3s infinite;
+}
+
+.sos-button:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 12px 35px rgba(239, 68, 68, 0.5);
+}
+
+.sos-button:active {
+    transform: scale(0.98);
+}
+
+.sos-icon {
+    font-size: 28px;
+    animation: pulse 2s infinite;
+}
+
+.sos-text {
+    position: relative;
+    z-index: 1;
+}
+
+/* 기존 .sos-modal-content 찾아서 수정 */
+.sos-modal-content {
+    max-width: min(420px, 90vw);
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: clamp(20px, 5vw, 40px);
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(226, 232, 240, 0.3);
+    border-radius: 24px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+
+[data-theme="dark"] .sos-modal-content {
+    background: rgba(15, 23, 42, 0.75);
+    border: 1px solid rgba(51, 65, 85, 0.3);
+}
+
+/* 기존 .sos-modal-header 찾아서 수정 */
+.sos-modal-header {
+    text-align: center;
+    margin-bottom: clamp(16px, 4vw, 24px);
+}
+
+/* 기존 .sos-modal-icon 찾아서 수정 */
+.sos-modal-icon {
+    font-size: clamp(40px, 12vw, 64px);
+    margin-bottom: clamp(12px, 3vw, 16px);
+    animation: celebrateIcon 1s ease infinite;
+}
+
+/* 기존 .sos-modal-title 찾아서 수정 */
+.sos-modal-title {
+    font-size: clamp(18px, 5vw, 24px);
+    font-weight: 900;
+    color: var(--primary);
+    line-height: 1.3;
+}
+
+/* 기존 .sos-modal-body 찾아서 수정 */
+.sos-modal-body {
+    background: rgba(248, 250, 252, 0.4);
+    backdrop-filter: blur(15x);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(226, 232, 240, 0.3);
+    border-radius: 16px;
+    padding: clamp(16px, 4vw, 24px);
+    margin-bottom: clamp(12px, 3vw, 20px);
+    min-height: clamp(80px, 20vw, 120px);
+    max-height: 40vh;
+    overflow-y: auto;
+    line-height: 1.6;
+    font-size: clamp(13px, 3.5vw, 15px);
+    color: var(--text);
+}
+
+[data-theme="dark"] .sos-modal-body {
+    background: rgba(30, 41, 59, 0.4);
+    border: 1px solid rgba(51, 65, 85, 0.3);
+}
+
+/* 기존 .sos-modal-actions 찾아서 수정 */
+.sos-modal-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(8px, 2vw, 12px);
+    margin-bottom: clamp(8px, 2vw, 12px);
+}
+
+/* 기존 .sos-action-btn 찾아서 수정 */
+.sos-action-btn {
+    padding: clamp(12px, 3vw, 16px);
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 2px solid rgba(226, 232, 240, 0.5);
+    border-radius: 12px;
+    font-size: clamp(13px, 3.5vw, 15px);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+[data-theme="dark"] .sos-action-btn {
+    background: rgba(30, 41, 59, 0.5);
+    border: 2px solid rgba(51, 65, 85, 0.5);
+}
+
+.sos-action-btn:hover {
+    border-color: var(--primary);
+    background: rgba(99, 102, 241, 0.15);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    transform: translateY(-2px);
+}
+
+.sos-action-btn:active {
+    transform: scale(0.98);
+}
+
+/* Breathing Guide */
+/* 기존 .breathing-modal-content 찾아서 수정 */
+.breathing-modal-content {
+    max-width: min(400px, 90vw);
+    max-height: 85vh;
+    padding: clamp(20px, 5vw, 40px) clamp(15px, 4vw, 30px);
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(226, 232, 240, 0.3);
+    border-radius: 24px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .breathing-modal-content {
+    background: rgba(15, 23, 42, 0.75);
+    border: 1px solid rgba(51, 65, 85, 0.3);
+}
+
+.breathing-circle {
+    width: clamp(130px, 40vw, 200px);
+    height: clamp(130px, 40vw, 200px);
+    margin: 0 auto clamp(20px, 5vw, 30px);
+    border-radius: 50%;
+    background: var(--gradient-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 4s ease-in-out, box-shadow 4s ease-in-out;
+    box-shadow: 0 8px 30px rgba(99, 102, 241, 0.3);
+    will-change: transform;
+}
+
+/* 들이쉬기 애니메이션 */
+.breathing-circle.inhale {
+    transform: scale(1.3);
+    box-shadow: 0 12px 50px rgba(99, 102, 241, 0.5);
+}
+
+/* 내쉬기 애니메이션 */
+.breathing-circle.exhale {
+    transform: scale(0.85);
+    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.2);
+}
+
+.breathing-text {
+    font-size: clamp(18px, 5vw, 24px);
+    font-weight: 700;
+    color: white;
+    transition: opacity 0.5s ease;
+}
+
+.breathing-instruction {
+    text-align: center;
+    font-size: clamp(14px, 3.5vw, 18px);
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: clamp(12px, 3vw, 20px);
+    line-height: 1.5;
+    padding: 0 10px;
+    transition: opacity 0.5s ease;
+    min-height: clamp(40px, 10vw, 60px);
+}
+
+/* 작은 화면 최적화 */
+@media (max-width: 380px) {
+    .breathing-circle {
+        width: clamp(100px, 35vw, 150px);
+        height: clamp(100px, 35vw, 150px);
+    }
+    
+    .breathing-circle.inhale {
+        transform: scale(1.25);
+    }
+    
+    .breathing-circle.exhale {
+        transform: scale(0.9);
+    }
+}
+
+/* 매우 작은 화면 (플립폰 등) */
+@media (max-width: 320px), (max-height: 500px) {
+    .breathing-circle {
+        width: 70px;
+        height: 70px;
+        margin: 0 auto 10px;
+    }
+    
+    .breathing-circle.inhale {
+        transform: scale(1.2);
+    }
+    
+    .breathing-circle.exhale {
+        transform: scale(0.9);
+    }
+    
+    .breathing-text {
+        font-size: 16px;
+    }
+    
+    .breathing-instruction {
+        font-size: 12px;
+        margin-bottom: 8px;
+        min-height: 30px;
+    }
+}
+
+@keyframes breathePulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+
+
+@keyframes slideInFromTop {
+    0% {
+        /* translateX(-50%)는 중앙 정렬을 위한 필수값 */
+        transform: translate(-50%, -100%); 
+        opacity: 0;
+    }
+    100% {
+        transform: translate(-50%, 0); 
+        opacity: 1;
+    }
+}
+
+/* 네비게이션: 아래에서 위로 슬라이드 */
+@keyframes slideInFromBottom {
+    0% {
+        /* translateX(-50%)는 중앙 정렬을 위한 필수값 */
+        transform: translate(-50%, 100%); 
+        opacity: 0;
+    }
+    100% {
+        transform: translate(-50%, 0); 
+        opacity: 1;
+    }
+}
+.first-launch .header {
+    animation: slideInFromTop 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both;
+}
+.first-launch .bottom-nav {
+    animation: slideInFromBottom 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both;
+}
+/* 기존 코드를 찾아서 이렇게 수정 */
+.first-launch .time-display {
+    animation: iosCardFlyIn 0.9s cubic-bezier(0.4, 1.2, 0.5, 1) 0.5s both;
+}
+.first-launch .sos-button-container {
+    animation: iosCardFlyIn 0.9s cubic-bezier(0.4, 1.2, 0.5, 1) 0.65s both;
+}
+.first-launch .motivation-card {
+    animation: iosCardFlyIn 0.9s cubic-bezier(0.4, 1.2, 0.5, 1) 0.8s both;
+}
+.first-launch .stat-card:nth-child(1) {
+    animation: iosCardFlyIn 0.9s cubic-bezier(0.4, 1.2, 0.5, 1) 0.95s both;
+}
+.first-launch .stat-card:nth-child(2) {
+    animation: iosCardFlyIn 0.9s cubic-bezier(0.4, 1.2, 0.5, 1) 1.05s both;
+}
+.first-launch .stat-card:nth-child(3) {
+    animation: iosCardFlyIn 0.9s cubic-bezier(0.4, 1.2, 0.5, 1) 1.15s both;
+}
+.first-launch .stat-card:nth-child(4) {
+    animation: iosCardFlyIn 0.9s cubic-bezier(0.4, 1.2, 0.5, 1) 1.25s both;
+}
+/* 기존 애니메이션 코드들 아래에 추가 */
+.first-launch .sos-button-container {
+    animation: iosCardFlyIn 0.9s cubic-bezier(0.4, 1.2, 0.5, 1) 1.35s both;
+}
+.first-launch .level-preview {
+    animation: iosCardFlyIn 0.9s cubic-bezier(0.4, 1.2, 0.5, 1) 1.45s both;
+}
+.first-launch .progress-summary {
+    animation: iosCardFlyIn 0.9s cubic-bezier(0.4, 1.2, 0.5, 1) 1.55s both;
+}
+.first-launch .daily-quote {
+    animation: iosCardFlyIn 0.9s cubic-bezier(0.4, 1.2, 0.5, 1) 1.65s both;
+}
+.first-launch .past-smoking-card {
+    animation: iosCardFlyIn 0.9s cubic-bezier(0.4, 1.2, 0.5, 1) 1.75s both;
+}
+
+
+
+@media (max-width: 380px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    .level-number {
+        font-size: 60px;
+    }
+    .nav-label {
+        font-size: 10px;
+    }
+    .checkbox-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 가로 모드 및 작은 화면 대응 */
+@media (max-height: 600px) {
+    .sos-modal-content,
+    .breathing-modal-content {
+        max-height: 95vh;
+        padding: 15px;
+    }
+    
+    .sos-modal-body {
+        max-height: 30vh;
+        min-height: 60px;
+    }
+    
+    .breathing-circle {
+        width: 120px;
+        height: 120px;
+        margin-bottom: 15px;
+    }
+    
+    .sos-modal-actions {
+        gap: 8px;
+    }
+    
+    #personalMessageInput {
+        min-height: 80px;
+        max-height: 25vh;
+    }
+}
+
+/* 매우 작은 화면 */
+@media (max-width: 320px) {
+    .sos-modal-content,
+    .breathing-modal-content {
+        padding: 15px 12px;
+    }
+    
+    .sos-action-btn {
+        font-size: 12px;
+        padding: 10px;
+    }
+}
+
+/* 가로 모드 및 작은 화면 대응 */
+@media (max-height: 600px) {
+    .modal-content {
+        max-height: 95vh;
+        padding: clamp(15px, 3vw, 25px);
+    }
+    
+    .modal-text {
+        max-height: 50vh;
+        font-size: clamp(11px, 2.8vw, 14px);
+        margin-bottom: clamp(12px, 3vw, 20px);
+    }
+    
+    .modal-buttons {
+        gap: 8px;
+    }
+    
+    .modal-btn {
+        padding: clamp(10px, 2.5vw, 14px);
+        font-size: clamp(12px, 3vw, 14px);
+    }
+}
+
+/* 매우 작은 화면 (플립폰 등) */
+@media (max-width: 320px), (max-height: 500px) {
+    .modal-content {
+        padding: 15px;
+        max-height: 92vh;
+    }
+    
+    .modal-title {
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
+    
+    .modal-text {
+        font-size: 11px;
+        line-height: 1.4;
+        margin-bottom: 12px;
+        max-height: 45vh;
+    }
+    
+    .modal-btn {
+        padding: 10px;
+        font-size: 12px;
+        min-height: 40px;
+    }
+}
+   </style>
+</head>
+<body>
+    <div class="app-container" id="app">
+        <!-- Header -->
+        <div class="header" id="header">
+            <div class="header-title" id="headerTitle">금연 도우미</div>
+        </div>
+
+        <!-- Welcome Page -->
+        <div class="page active" id="welcomePage">
+            <div class="welcome-screen">
+                <div class="welcome-icon">🌟</div>
+                <div class="welcome-title">새로운 시작</div>
+                <div class="welcome-subtitle">
+                    당신의 건강한 내일을 위한<br>
+                    첫 걸음을 시작합니다<br>
+                    함께 해보시겠어요?
+                </div>
+                <button class="btn" onclick="goToOnboarding()">시작하기</button>
+            </div>
+        </div>
+
+        <!-- Onboarding Page -->
+        <div class="page" id="onboardingPage">
+            <h2 style="font-size: 28px; font-weight: 900; margin-bottom: 30px; color: var(--primary);">정보 입력</h2>
+            
+            <div class="form-group">
+                <label>이름</label>
+                <input type="text" id="userName" placeholder="홍길동">
+            </div>
+            <div class="form-group">
+                <label>생년월일</label>
+                <input type="date" id="birthDate">
+            </div>
+            <div class="past-smoking-section"> 
+                <div class="section-header">🚬 과거 흡연 정보</div> 
+                <div class="form-group"> 
+                    <label>흡연 기간 (년)</label> 
+                    <input type="number" id="smokingYears" placeholder="7"> 
+                </div> 
+                <div class="form-group"> 
+                    <label>하루 흡연량 (갑)</label> 
+                    <input type="number" step="0.1" id="packsPerDay" placeholder="1" oninput="calculateMonthlySpending()"> 
+                </div> 
+                <div class="form-group"> 
+                    <label>한 갑당 담배 개비 수</label> 
+                    <input type="number" id="cigarettesPerPack" value="20"> 
+                </div> 
+                <div class="form-group"> 
+                    <label>한 갑 가격 (원)</label> 
+                    <input type="number" id="pricePerPack" placeholder="4500" oninput="calculateMonthlySpending()"> 
+                </div> 
+                <div class="form-group"> 
+                    <label>월 평균 담배비 (원)</label> 
+                    <input type="text" id="monthlySpending" placeholder="자동 계산" readonly> 
+                </div> 
+                <div id="dangerLevel" class="danger-level"></div>
+            </div>
+            <div class="form-group">
+                <label>담배가 생각나는 상황</label>
+                <div class="checkbox-grid">
+                    <label class="checkbox-label">
+                        <input type="checkbox" value="스트레스">
+                        <span>스트레스</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" value="식사후">
+                        <span>식사 후</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" value="술자리">
+                        <span>술자리</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" value="아침">
+                        <span>아침 기상</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" value="휴식">
+                        <span>휴식 시간</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" value="지루함">
+                        <span>지루할 때</span>
+                    </label>
+                </div>
+            </div>
+            <button class="btn" onclick="showRiskDisplay()">다음</button>
+        </div>
+
+        <!-- Risk Display Page -->
+        <div class="page" id="riskDisplayPage">
+            <div class="risk-display-page">
+                <div class="risk-icon">⚠️</div>
+                <div class="risk-title">과거 흡연의 영향</div>
+                
+                <div class="risk-stats">
+                    <div class="risk-stat-item">
+                        <span class="risk-stat-label">흡연 기간</span>
+                        <span class="risk-stat-value" id="riskYears">-</span>
+                    </div>
+                    <div class="risk-stat-item">
+                        <span class="risk-stat-label">하루 흡연량</span>
+                        <span class="risk-stat-value" id="riskPacks">-</span>
+                    </div>
+                    <div class="risk-stat-item">
+                        <span class="risk-stat-label">총 흡연 개비</span>
+                        <span class="risk-stat-value" id="riskTotalCigs">-</span>
+                    </div>
+                    <div class="risk-stat-item">
+                        <span class="risk-stat-label">총 소비 금액</span>
+                        <span class="risk-stat-value" id="riskTotalMoney">-</span>
+                    </div>
+                </div>
+
+                <div class="risk-level-badge" id="riskLevelBadge">-</div>
+
+                <div style="font-size: clamp(14px, 3.5vw, 16px); color: var(--text-secondary); line-height: 1.8; margin: 20px 0;">
+                    하지만 지금부터 금연을 시작하면<br>
+                    건강을 되찾을 수 있습니다!
+                </div>
+
+                <button class="btn" onclick="goToDateTimeInput()">금연 시작하기</button>
+            </div>
+        </div>
+
+        <!-- DateTime Input Page -->
+        <div class="page" id="dateTimeInputPage">
+            <div class="welcome-screen">
+                <div class="welcome-icon">🎯</div>
+                <div class="welcome-title">금연 시작 시간</div>
+                <div class="welcome-subtitle">
+                    마지막 담배를 피운 시간 또는<br>
+                    금연을 시작할 시간을 입력해주세요
+                </div>
+                
+                <div class="form-group" style="margin: 40px 0;">
+                    <input type="datetime-local" id="quitDateTime" style="font-size: 16px; text-align: center;">
+                </div>
+
+                <button class="btn" onclick="startQuitJourney()">시작하기</button>
+            </div>
+        </div>
+        <!-- Level Page -->
+        <div class="page page-container" id="levelPage">
+            <div class="level-card">
+                <div class="level-badge">금연중</div>
+                <div style="font-size: 14px; opacity: 0.9; margin-bottom: 5px;">현재 레벨</div>
+                <div class="level-number" id="levelNumber">1</div>
+                <div class="level-title" id="levelName">금연 새싹</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="levelProgressBar"></div>
+                </div>
+                <div style="font-size: 13px; opacity: 0.85; margin-top: 10px;" id="levelProgressText">다음 레벨까지 0%</div>
+            </div>
+            <div class="section-header">🏆 달성한 업적</div>
+            <div id="completedAchievements"></div>
+            <div class="section-header" style="margin-top: 30px;">🎯 다음 목표</div>
+            <div id="nextAchievement"></div>
+        </div>
+
+        <!-- Savings Page -->
+        <div class="page page-container" id="savingsPage">
+            <div class="card" style="text-align: center; margin-bottom: 24px;">
+                <div class="card-label">지금까지 절약한 금액</div>
+                <div class="card-value" id="totalSavings">0원</div>
+            </div>
+            <div class="section-header">💰 절약한 돈으로 살 수 있는 것</div>
+            <div id="savingsItems"></div>
+        </div>
+
+        <!-- Home Page -->
+        <div class="page page-container" id="homePage">
+            <div class="time-display">
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    금연 중
+                </div>
+                <div class="stat-label">금연한 시간</div>
+                <div class="time-value" id="quitTime">0일 0시간</div>
+            </div>
+
+            <div class="motivation-card">
+                <div class="motivation-text" id="motivationText">당신은 할 수 있습니다!</div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-value" id="savedMoney">0원</div>
+                    <div class="stat-label">아낀 돈</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">❤️</div>
+                    <div class="stat-value" id="healthImprovement">0%</div>
+                    <div class="stat-label">건강 개선도</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🚭</div>
+                    <div class="stat-value" id="cigarettesAvoided">0개비</div>
+                    <div class="stat-label">안 피운 담배</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⏱️</div>
+                    <div class="stat-value" id="lifeGained">0분</div>
+                    <div class="stat-label">늘어난 수명</div>
+                </div>
+            </div>
+
+            <!-- Home Page 내부, time-display 다음에 추가 -->
+            <div class="sos-button-container">
+                <button class="sos-button" onclick="showSOSModal()">
+                    <div class="sos-icon">🆘</div>
+                    <div class="sos-text">위기 상황 도움</div>
+                </button>
+            </div>
+            
+                        <!-- SOS Modal -->
+            <div class="modal" id="sosModal">
+                <div class="modal-content sos-modal-content">
+                    <div class="sos-modal-header">
+                        <div class="sos-modal-icon">💪</div>
+                        <div class="sos-modal-title">당신은 강합니다!</div>
+                    </div>
+
+                    <div class="sos-modal-body" id="sosModalBody">
+                        <!-- 동적으로 채워질 내용 -->
+                    </div>
+
+                    <div class="sos-modal-actions">
+                        <button class="sos-action-btn" onclick="showBreathingGuide()">
+                            🫁 심호흡 가이드
+                        </button>
+                        <button class="sos-action-btn" onclick="showMotivationalQuote()">
+                            💬 강력한 명언
+                        </button>
+                        <button class="sos-action-btn" onclick="showPersonalMessage()">
+                            💌 나에게 쓴 편지
+                        </button>
+                    </div>
+
+                    <button class="modal-btn modal-btn-confirm" onclick="closeSOSModal()" style="margin-top: 20px;">
+                        위기를 극복했습니다! 🎉
+                    </button>
+                </div>
+            </div>
+
+            <!-- Breathing Guide Modal -->
+            <div class="modal" id="breathingModal">
+                <div class="modal-content breathing-modal-content">
+                    <div class="breathing-circle" id="breathingCircle">
+                        <div class="breathing-text" id="breathingText">준비...</div>
+                    </div>
+                    <div class="breathing-instruction" id="breathingInstruction">
+                        심호흡을 시작합니다
+                    </div>
+                    <button class="modal-btn modal-btn-cancel" onclick="stopBreathing()" style="margin-top: 20px;">
+                        닫기
+                    </button>
+                </div>
+            </div>
+
+            <!-- Personal Message Setup Modal -->
+            <div class="modal" id="personalMessageModal">
+                <div class="modal-content">
+                    <div class="modal-title">나에게 쓰는 편지</div>
+                    <div class="modal-text">
+                        담배를 피우고 싶을 때 읽을<br>나 자신에게 쓰는 격려의 메시지
+                    </div>
+                    <textarea id="personalMessageInput" 
+                              placeholder="예: 나는 할 수 있어! 이 순간만 참으면 돼. 가족을 생각해, 건강을 생각해!"
+                              style="width: 100%; min-height: 120px; padding: 12px; border: 2px solid var(--border); border-radius: 12px; font-size: 14px; resize: vertical; font-family: inherit; margin: 16px 0;"></textarea>
+                    <div class="modal-buttons">
+                        <button class="modal-btn modal-btn-cancel" onclick="closePersonalMessageModal()">취소</button>
+                        <button class="modal-btn modal-btn-confirm" onclick="savePersonalMessage()">저장</button>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="level-preview">
+                <div class="section-header" style="margin-bottom: 16px;">🏆 레벨 정보</div>
+                <div class="level-info">
+                    <span class="current-level" id="currentLevelHome">금연 새싹 Lv.1</span>
+                    <span class="next-level" id="nextLevelHome">다음: 금연 새내기</span>
+                </div>
+                <div class="level-progress-mini">
+                    <div class="level-progress-fill-mini" id="levelProgressMini"></div>
+                </div>
+                <div style="text-align: right; font-size: 12px; color: var(--text-secondary); margin-top: 8px;" id="levelTimeRemaining">남은 시간: 계산 중...</div>
+            </div>
+
+            <div class="progress-summary">
+                <div class="section-header" style="margin-bottom: 16px;">📊 현재 진행사항</div>
+                <div class="progress-item">
+                    <span class="progress-label">달성한 업적</span>
+                    <span class="progress-value" id="completedCount">0개</span>
+                </div>
+                <div class="progress-item">
+                    <span class="progress-label">절약 가능한 항목</span>
+                    <span class="progress-value" id="unlockedSavings">0개</span>
+                </div>
+                <div class="progress-item">
+                    <span class="progress-label">건강 회복도</span>
+                    <span class="progress-value" id="healthProgress">0%</span>
+                </div>
+            </div>
+
+            <div class="daily-quote">
+                <div class="quote-text" id="dailyQuoteText">"성공은 작은 노력들의 합이며, 매일 반복되는 것입니다."</div>
+                <div class="quote-author" id="dailyQuoteAuthor">- 로버트 콜리어</div>
+            </div>
+
+            <div class="past-smoking-card" onclick="showPastSmokingInfo()">
+                <div class="past-smoking-header">
+                    <div class="past-smoking-icon">📊</div>
+                    <div>
+                        <div class="past-smoking-title">과거 흡연 정보</div>
+                        <div class="past-smoking-info" id="pastSmokingInfoHome">흡연 기간 및 위험도 확인</div>
+                    </div>
+                    <div style="font-size: 20px; color: var(--text-secondary);">›</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Page -->
+        <div class="page page-container" id="progressPage">
+            <div class="section-header">📊 건강 회복 과정</div>
+            <div id="allAchievements"></div>
+        </div>
+        <!-- Settings Page -->
+        <div class="page page-container" id="settingsPage">
+            <div class="settings-section">
+                <div class="settings-title">프로필</div>
+                <div class="settings-item">
+                    <div class="settings-info">
+                        <div class="settings-label" id="profileName">홍길동</div>
+                        <div class="settings-value" id="quitStartDate">금연 시작일</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <div class="settings-title">금연 관리</div>
+                <div class="settings-item" onclick="resetQuit()">
+                    <div class="settings-info">
+                        <div class="settings-label">금연 다시 시작</div>
+                        <div class="settings-value">모든 데이터 초기화</div>
+                    </div>
+                    <div style="font-size: 20px;">🔄</div>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <div class="settings-title">테마</div>
+                <div class="settings-item" onclick="toggleTheme()">
+                    <div class="settings-info">
+                        <div class="settings-label">다크모드</div>
+                        <div class="settings-value">테마 변경</div>
+                    </div>
+                    <div class="toggle-switch" id="themeToggle">
+                        <div class="toggle-knob"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <div class="settings-title">알림 설정</div>
+                <div class="settings-item" onclick="toggleDailyReminders()">
+                    <div class="settings-info">
+                        <div class="settings-label">일일 격려 알림</div>
+                        <div class="settings-value">하루 3번 격려 메시지</div>
+                    </div>
+                    <div class="toggle-switch" id="reminderToggle">
+                        <div class="toggle-knob"></div>
+                    </div>
+                </div>
+                <div class="settings-item" onclick="testNotification()">
+                    <div class="settings-info">
+                        <div class="settings-label">알림 테스트</div>
+                        <div class="settings-value">알림이 제대로 작동하는지 확인</div>
+                    </div>
+                    <div style="font-size: 20px;">🔔</div>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <div class="settings-title">앱 정보</div>
+                <div class="settings-item" onclick="shareApp()">
+                    <div class="settings-info">
+                        <div class="settings-label">앱 공유하기</div>
+                        <div class="settings-value">친구에게 추천하기</div>
+                    </div>
+                    <div style="font-size: 20px;">📤</div>
+                </div>
+                <div class="settings-item" onclick="sendEmail()">
+                    <div class="settings-info">
+                        <div class="settings-label">개발자에게 메일 보내기</div>
+                        <div class="settings-value">피드백 및 문의</div>
+                    </div>
+                    <div style="font-size: 20px;">📧</div>
+                </div>
+                <div class="settings-item" style="cursor: default;">
+                    <div class="settings-info">
+                        <div class="settings-label">버전</div>
+                        <div class="settings-value">개발자 버전 2.2.0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav" id="bottomNav">
+            <div class="nav-item active" onclick="navigateTo('level')">
+                <div class="nav-icon">🏆</div>
+                <div class="nav-label">레벨</div>
+            </div>
+            <div class="nav-item" onclick="navigateTo('savings')">
+                <div class="nav-icon">💰</div>
+                <div class="nav-label">절약</div>
+            </div>
+            <div class="nav-item" onclick="navigateTo('home')">
+                <div class="nav-icon">🏠</div>
+                <div class="nav-label">홈</div>
+            </div>
+            <div class="nav-item" onclick="navigateTo('progress')">
+                <div class="nav-icon">📊</div>
+                <div class="nav-label">진행</div>
+            </div>
+            <div class="nav-item" onclick="navigateTo('settings')">
+                <div class="nav-icon">⚙️</div>
+                <div class="nav-label">설정</div>
+            </div>
+        </div>
+
+<!-- Reset Modal - 기존 코드 교체 -->
+<div class="modal" id="resetModal">
+    <div class="modal-content">
+        <div class="modal-title">금연 다시 시작</div>
+        <div class="modal-text" id="resetModalText">
+            모든 데이터가 초기화됩니다.<br>
+            정말 다시 시작하시겠습니까?
+        </div>
+        <div class="modal-buttons">
+            <button class="modal-btn modal-btn-cancel" onclick="closeResetModal()">취소</button>
+            <button class="modal-btn modal-btn-confirm" onclick="confirmReset()">확인</button>
+        </div>
+    </div>
+</div>
+
+        <!-- Past Smoking Info Modal -->
+        <div class="modal" id="pastSmokingModal">
+            <div class="modal-content">
+                <div class="modal-title">과거 흡연 정보</div>
+                <div class="modal-text" id="pastSmokingDetails"></div>
+                <div class="modal-buttons">
+                    <button class="modal-btn modal-btn-confirm" onclick="closePastSmokingModal()">확인</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Achievement Notification (알림 팝업) -->
+        <div class="achievement-notification-overlay" id="achievementOverlay" onclick="closeAchievementNotification()"></div>
+        <div class="achievement-notification" id="achievementNotification">
+            <div class="achievement-notification-icon" id="achievementIcon">🎉</div>
+            <div class="achievement-notification-title" id="achievementTitle">축하합니다!</div>
+            <div class="achievement-notification-desc" id="achievementDesc">새로운 업적을 달성했습니다</div>
+            <button class="achievement-notification-btn" onclick="closeAchievementNotification()">확인</button>
+        </div>
+    </div>
+
+    <script>
+        /* 여기에 JavaScript 코드가 들어갑니다 */
+        let userData = {};
+let updateInterval, motivationInterval;
+let currentMotivationIndex = 0;
+let touchStartX = 0, touchEndX = 0;
+let currentPageIndex = 0;
+const pageOrder = ['level', 'savings', 'home', 'progress', 'settings'];
+let db = null;
+let isFirstLaunch = false;
+let achievedMilestones = new Set();
+let unlockedSavingsGoals = new Set();
+let lastLevel = 0;
+
+const motivationMessages = [
+    "저는 담배를 안 태웠습니다!", "저는 승리했습니다!", "나는 무엇이든 할 수 있습니다!",
+    "나는 강한 사람입니다!", "나는 자유로워졌습니다!", "나는 건강을 되찾고 있습니다!",
+    "나는 내 삶의 주인입니다!", "나는 해냈습니다!", "나는 포기하지 않습니다!",
+    "나는 더 나은 사람이 되고 있습니다!"
+];
+
+const dailyQuotes = [
+    { text: "성공은 작은 노력들의 합이며, 매일 반복되는 것입니다. 당신이 금연을 선택한 매 순간이 바로 그 작은 승리입니다.", author: "로버트 콜리어" },
+    { text: "변화는 고통스럽지만, 변하지 않는 것은 더욱 고통스럽습니다. 당신은 지금 가장 용기있는 변화를 만들어가고 있습니다.", author: "버나드 쇼" },
+    { text: "습관이 바뀌면 운명이 바뀝니다. 금연이라는 새로운 습관으로 당신의 인생이 완전히 달라질 것입니다.", author: "윌리엄 제임스" },
+    { text: "가장 어두운 밤이 지나면 가장 밝은 새벽이 옵니다. 금단 증상도 지나가면 더 건강하고 자유로운 당신이 기다리고 있습니다.", author: "토마스 풀러" },
+    { text: "당신이 할 수 있다고 믿든, 할 수 없다고 믿든, 당신이 옳습니다. 금연에 대한 믿음이 성공의 열쇠입니다.", author: "헨리 포드" }
+];
+
+const milestones = [
+    { minutes: 1, level: 1, title: "1분 달성", desc: "심박수와 혈압이 정상화되기 시작합니다.", icon: "💗" },
+    { minutes: 20, level: 2, title: "20분 성공", desc: "손과 발의 혈액순환이 개선됩니다.", icon: "🖐️" },
+    { minutes: 480, level: 3, title: "8시간 돌파", desc: "혈중 일산화탄소가 정상으로 회복됩니다.", icon: "🫁" },
+    { minutes: 1440, level: 4, title: "하루 완성", desc: "심장마비 위험이 감소하기 시작합니다.", icon: "❤️" },
+    { minutes: 4320, level: 5, title: "3일 통과", desc: "니코틴이 완전히 배출됩니다.", icon: "🎯" },
+    { minutes: 7200, level: 6, title: "5일 돌파", desc: "후각과 미각이 크게 향상됩니다.", icon: "👃" },
+    { minutes: 10080, level: 7, title: "1주 완료", desc: "금단 증상이 완화되기 시작합니다.", icon: "⚡" },
+    { minutes: 20160, level: 8, title: "2주 달성", desc: "혈액순환과 폐 기능이 향상됩니다.", icon: "🏋️" },
+    { minutes: 30240, level: 9, title: "3주 통과", desc: "집중력과 수면의 질이 개선됩니다.", icon: "🧠" },
+    { minutes: 43200, level: 10, title: "1개월 완성", desc: "기침, 숨가쁨 증상이 감소됩니다.", icon: "🌬️" },
+    { minutes: 60480, level: 11, title: "6주 돌파", desc: "폐의 자체 정화 기능이 회복됩니다.", icon: "🧹" },
+    { minutes: 86400, level: 12, title: "2개월 달성", desc: "전반적인 체력이 증가됩니다.", icon: "💪" },
+    { minutes: 129600, level: 13, title: "3개월 완료", desc: "폐 기능과 면역력이 향상됩니다.", icon: "🛡️" },
+    { minutes: 172800, level: 14, title: "4개월 통과", desc: "호흡기 증상이 지속적으로 감소됩니다.", icon: "🌳" },
+    { minutes: 216000, level: 15, title: "5개월 달성", desc: "폐 섬모 기능이 완전히 회복됩니다.", icon: "🌲" },
+    { minutes: 259200, level: 16, title: "6개월 완성", desc: "만성 기침, 가래가 크게 감소됩니다.", icon: "🏆" },
+    { minutes: 388800, level: 17, title: "9개월 돌파", desc: "폐 기능이 최대 10% 증가됩니다.", icon: "🥇" },
+    { minutes: 525600, level: 18, title: "1년 달성", desc: "심장병 위험이 50% 감소됩니다.", icon: "💝" },
+    { minutes: 1051200, level: 19, title: "2년 완료", desc: "심장마비 위험이 극적으로 감소됩니다.", icon: "💖" },
+    { minutes: 1576800, level: 20, title: "3년 통과", desc: "구강암 위험이 50% 감소됩니다.", icon: "👄" },
+    { minutes: 2102400, level: 21, title: "4년 달성", desc: "뇌졸중 위험이 지속적으로 감소됩니다.", icon: "🧠" },
+    { minutes: 2628000, level: 22, title: "5년 완성", desc: "뇌졸중 위험이 비흡연자 수준이 됩니다.", icon: "🧠" },
+    { minutes: 3679200, level: 23, title: "7년 돌파", desc: "주요 암 발생 위험이 지속적으로 감소됩니다.", icon: "🎗️" },
+    { minutes: 5256000, level: 24, title: "10년 달성", desc: "폐암 사망 위험이 50% 감소됩니다.", icon: "🌟" }
+];
+
+const savingsGoals = [
+    { name: "믹스커피 10개입", price: 3500, emoji: "☕" },
+    { name: "편의점 음료 및 간식", price: 4500, emoji: "🥤" },
+    { name: "로또 복권 1장", price: 5000, emoji: "🍀" },
+    { name: "햄버거 세트", price: 9000, emoji: "🍔" },
+    { name: "일반 점심 식사", price: 12000, emoji: "🍚" },
+    { name: "영화 티켓 한 장", price: 16000, emoji: "🎬" },
+    { name: "베스트셀러 책 1권", price: 20000, emoji: "📚" },
+    { name: "배달 치킨 한 마리", price: 27000, emoji: "🍗" },
+    { name: "한 달 OTT 구독료", price: 35000, emoji: "📺" },
+    { name: "보급형 운동화", price: 59000, emoji: "👟" },
+    { name: "한 달 대중교통비", price: 75000, emoji: "🚌" },
+    { name: "기본 무선 이어폰", price: 100000, emoji: "🎧" },
+    { name: "1박 2일 국내 여행 경비", price: 250000, emoji: "🏕️" },
+    { name: "보급형 태블릿", price: 480000, emoji: "📱" },
+    { name: "단기 해외여행 항공권", price: 850000, emoji: "✈️" }
+];
+
+const levelNames = {
+    1: "금연 새싹", 2: "금연 새내기", 3: "금연 도전자", 4: "금연 실천가", 5: "금연 달인",
+    6: "금연 고수", 7: "금연 마스터", 8: "금연 챔피언", 9: "금연 레전드", 10: "금연 영웅",
+    11: "금연 전설", 12: "금연 신화", 13: "금연 불멸자", 14: "금연 궁극자"
+};
+
+function hideAllMainUI() {
+    document.getElementById('header').classList.add('hidden');
+    document.getElementById('bottomNav').classList.add('hidden');
+    document.getElementById('welcomePage').classList.remove('active');
+    document.getElementById('onboardingPage')?.classList.remove('active');
+    document.getElementById('riskDisplayPage').classList.remove('active');
+    document.getElementById('dateTimeInputPage').classList.remove('active');
+    document.getElementById('main-app')?.classList.remove('active');
+    document.body.classList.remove('first-launch', 'main-app-enter');
+}
+
+function initDatabase() {
+    return new Promise((resolve, reject) => {
+        if (!window.cordova || !window.sqlitePlugin) {
+            console.log('SQLite not available, using localStorage');
+            resolve(false);
+            return;
+        }
+
+        db = window.sqlitePlugin.openDatabase({
+            name: 'quitSmoking.db',
+            location: 'default',
+            androidDatabaseProvider: 'system'
+        }, () => {
+            db.executeSql(
+                'CREATE TABLE IF NOT EXISTS userData (id INTEGER PRIMARY KEY, data TEXT)',
+                [],
+                () => {
+                    console.log('Database initialized');
+                    resolve(true);
+                },
+                (error) => {
+                    console.error('Table creation error:', error);
+                    reject(error);
+                }
+            );
+        }, (error) => {
+            console.error('Database open error:', error);
+            reject(error);
+        });
+    });
+}
+
+async function init() {
+    try {
+        await initDatabase();
+    } catch (e) {
+        console.log('Database init failed, using localStorage only');
+    }
+    
+    await loadDataSecure();
+    checkIfLoggedIn();
+    loadTheme();
+    loadNotificationSettings(); // 이 줄 추가
+    setDailyQuote();
+    calculateMonthlySpending();
+    setupAutoSave();
+    initPushNotifications();
+    window.scrollTo(0, 0);
+}
+
+function checkIfLoggedIn() {
+    hideAllMainUI();
+    if (userData.quitDateTime) {
+        showMainApp();
+    } else {
+        document.getElementById('welcomePage').classList.add('active');
+    }
+}
+
+if (window.cordova) {
+    document.addEventListener('deviceready', init, false);
+} else {
+    document.addEventListener('DOMContentLoaded', init);
+}
+
+
+function saveDataSecure() {
+    userData.achievedMilestones = Array.from(achievedMilestones);
+    userData.unlockedSavingsGoals = Array.from(unlockedSavingsGoals);
+    userData.lastLevel = lastLevel;
+    
+    const dataString = JSON.stringify(userData);
+    try {
+        localStorage.setItem('quitSmokingData', dataString);
+        localStorage.setItem('quitSmokingData_backup', dataString);
+        localStorage.setItem('quitSmokingData_timestamp', Date.now().toString());
+        sessionStorage.setItem('quitSmokingData', dataString);
+    } catch (e) {
+        console.error('localStorage save failed:', e);
+    }
+
+    if (db) {
+        db.executeSql(
+            'INSERT OR REPLACE INTO userData (id, data) VALUES (1, ?)',
+            [dataString],
+            () => console.log('Data saved to SQLite'),
+            (error) => console.error('SQLite save error:', error)
+        );
+    }
+}
+
+function loadDataSecure() {
+    return new Promise((resolve) => {
+        if (db) {
+            db.executeSql(
+                'SELECT data FROM userData WHERE id = 1',
+                [],
+                (rs) => {
+                    if (rs.rows.length > 0) {
+                        try {
+                            userData = JSON.parse(rs.rows.item(0).data);
+                            if (userData.quitDateTime) {
+                                userData.quitDateTime = new Date(userData.quitDateTime);
+                            }
+                            achievedMilestones = new Set(userData.achievedMilestones || []);
+                            unlockedSavingsGoals = new Set(userData.unlockedSavingsGoals || []);
+                            lastLevel = userData.lastLevel || 0;
+                            console.log('Data loaded from SQLite');
+                            resolve(true);
+                            return;
+                        } catch (e) {
+                            console.error('SQLite parse error:', e);
+                        }
+                    }
+                    loadFromLocalStorage();
+                    resolve(false);
+                },
+                (error) => {
+                    console.error('SQLite load error:', error);
+                    loadFromLocalStorage();
+                    resolve(false);
+                }
+            );
+        } else {
+            loadFromLocalStorage();
+            resolve(false);
+        }
+    });
+
+    function loadFromLocalStorage() {
+        const sources = [
+            'quitSmokingData',
+            'quitSmokingData_backup',
+            () => sessionStorage.getItem('quitSmokingData'),
+            () => sessionStorage.getItem('quitSmokingData_emergency')
+        ];
+        for (let source of sources) {
+            try {
+                const saved = typeof source === 'function' ? source() : localStorage.getItem(source);
+                if (saved) {
+                    userData = JSON.parse(saved);
+                    if (userData.quitDateTime) {
+                        userData.quitDateTime = new Date(userData.quitDateTime);
+                    }
+                    achievedMilestones = new Set(userData.achievedMilestones || []);
+                    unlockedSavingsGoals = new Set(userData.unlockedSavingsGoals || []);
+                    lastLevel = userData.lastLevel || 0;
+                    console.log('Data loaded from localStorage');
+                    return true;
+                }
+            } catch (e) {
+                continue;
+            }
+        }
+        return false;
+    }
+}
+
+function setupAutoSave() {
+    setInterval(() => {
+        if (userData.quitDateTime) saveDataSecure();
+    }, 5000);
+    ['beforeunload', 'pagehide', 'visibilitychange'].forEach(event => {
+        window.addEventListener(event, () => {
+            if (userData.quitDateTime) saveDataSecure();
+        });
+    });
+    document.addEventListener('pause', saveDataSecure);
+    document.addEventListener('resume', () => {
+        loadDataSecure().then(() => {
+            if (userData.quitDateTime) updateStats();
+        });
+    });
+}
+
+function goToOnboarding() {
+    navigateToPage('onboardingPage');
+    document.getElementById('header').classList.remove('hidden');
+    document.getElementById('bottomNav').classList.add('hidden');
+    setTimeout(() => window.scrollTo(0, 0), 100);
+}
+
+function calculateMonthlySpending() {
+    const packsPerDayEl = document.getElementById('packsPerDay');
+    const smokingYearsEl = document.getElementById('smokingYears');
+    const pricePerPackEl = document.getElementById('pricePerPack');
+    const monthlySpendingEl = document.getElementById('monthlySpending');
+
+    if (!packsPerDayEl || !smokingYearsEl || !pricePerPackEl || !monthlySpendingEl) return;
+
+    const packsPerDay = parseFloat(packsPerDayEl.value) || 0;
+    const smokingYears = parseFloat(smokingYearsEl.value) || 0;
+    const pricePerPack = parseFloat(pricePerPackEl.value) || 0;
+
+    const monthlySpending = Math.floor(packsPerDay * pricePerPack * 30);
+    monthlySpendingEl.value = monthlySpending.toLocaleString();
+
+    const weeklySpending = Math.floor(packsPerDay * pricePerPack * 7);
+    const weeklySpendingInput = document.getElementById('weeklySpending');
+    if (weeklySpendingInput) {
+        weeklySpendingInput.value = weeklySpending.toLocaleString();
+    }
+    
+    updateDangerLevel(packsPerDay, smokingYears);
+}
+
+function updateDangerLevel(packsPerDay, smokingYears) {
+    const dangerLevelEl = document.getElementById('dangerLevel');
+    if (!dangerLevelEl) return;
+    
+    const riskScore = packsPerDay * smokingYears;
+    let levelText, className;
+
+    if (isNaN(riskScore) || riskScore <= 0 || packsPerDay <= 0 || smokingYears <= 0) {
+        dangerLevelEl.textContent = '🚬 흡연 정보 입력 시 누적 위험도를 확인할 수 있습니다.';
+        dangerLevelEl.className = 'danger-level';
+        return;
+    }
+
+    if (riskScore < 5) {
+        levelText = `[${riskScore.toFixed(1)} 갑년] 🌱 낮은 위험 (5갑년 미만)`;
+        className = 'danger-low';
+    } else if (riskScore < 20) {
+        levelText = `[${riskScore.toFixed(1)} 갑년] 💡 중간 위험 (전문 상담이 권장됩니다)`;
+        className = 'danger-medium';
+    } else {
+        levelText = `[${riskScore.toFixed(1)} 갑년] 🚨 고위험 (국가 폐암 검진 권고 기준)`;
+        className = 'danger-high';
+    }
+    
+    dangerLevelEl.textContent = `누적 흡연 위험도: ${levelText}`;
+    dangerLevelEl.className = `danger-level ${className}`;
+}
+
+function showRiskDisplay() {
+    const fields = ['userName', 'birthDate', 'smokingYears', 'packsPerDay', 'cigarettesPerPack', 'pricePerPack'];
+    const values = {};
+    
+    for (let field of fields) {
+        const value = document.getElementById(field).value;
+        if (!value) {
+            alert('모든 항목을 입력해주세요!');
+            return;
+        }
+        values[field] = field.includes('smoking') || field.includes('packs') || field.includes('cigarettes') || field.includes('price') 
+            ? parseFloat(value) 
+            : value;
+    }
+
+    const situations = Array.from(document.querySelectorAll('#onboardingPage input[type="checkbox"]:checked'))
+        .map(cb => cb.value);
+    
+    const totalCigarettesPerDay = values.packsPerDay * values.cigarettesPerPack;
+    const riskScore = (values.smokingYears * totalCigarettesPerDay * values.pricePerPack) / 10000;
+    
+    userData = {
+        ...values,
+        monthlySpending: Math.floor(values.packsPerDay * values.pricePerPack * 30),
+        riskScore: riskScore,
+        situations
+    };
+
+    const totalCigs = Math.floor(values.smokingYears * 365 * values.packsPerDay * values.cigarettesPerPack);
+    const totalMoney = Math.floor(values.smokingYears * 365 * values.packsPerDay * values.pricePerPack);
+    
+    document.getElementById('riskYears').textContent = values.smokingYears + '년';
+    document.getElementById('riskPacks').textContent = values.packsPerDay + '갑/일';
+    document.getElementById('riskTotalCigs').textContent = totalCigs.toLocaleString() + '개비';
+    document.getElementById('riskTotalMoney').textContent = totalMoney.toLocaleString() + '원';
+
+    const riskBadge = document.getElementById('riskLevelBadge');
+    
+    if (userData.riskScore < 50) {
+        riskBadge.textContent = '낮은 위험도';
+        riskBadge.className = 'risk-level-badge risk-level-low';
+    } else if (userData.riskScore < 150) {
+        riskBadge.textContent = '중간 위험도';
+        riskBadge.className = 'risk-level-badge risk-level-medium';
+    } else {
+        riskBadge.textContent = '높은 위험도';
+        riskBadge.className = 'risk-level-badge risk-level-high';
+    }
+
+    navigateToPage('riskDisplayPage');
+    document.getElementById('header').classList.add('hidden');
+    document.getElementById('bottomNav').classList.add('hidden');
+    setTimeout(() => window.scrollTo(0, 0), 100);
+}
+
+function goToDateTimeInput() {
+    const now = new Date();
+    const pad = (num) => (num < 10 ? '0' : '') + num;
+    const datetimeString = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
+    
+    document.getElementById('quitDateTime').value = datetimeString;
+    
+    navigateToPage('dateTimeInputPage');
+    document.getElementById('header').classList.add('hidden');
+    document.getElementById('bottomNav').classList.add('hidden');
+    setTimeout(() => window.scrollTo(0, 0), 100);
+}
+
+function startQuitJourney() {
+    let quitDateTimeValue = document.getElementById('quitDateTime').value;
+
+    if (!quitDateTimeValue) {
+        const now = new Date();
+        quitDateTimeValue = now.toISOString();
+    }
+    
+    userData.quitDateTime = new Date(quitDateTimeValue);
+    isFirstLaunch = true;
+    saveDataSecure();
+    
+    // 알림 설정
+    if (window.cordova && window.cordova.plugins && window.cordova.plugins.notification) {
+        setupNotifications();
+    }
+    
+    showMainApp();
+}
+function showMainApp() {
+    document.getElementById('riskDisplayPage').classList.remove('active');
+    document.getElementById('dateTimeInputPage').classList.remove('active');
+    document.getElementById('welcomePage').classList.remove('active');
+    document.getElementById('onboardingPage')?.classList.remove('active');
+    
+    document.body.classList.remove('first-launch', 'main-app-enter');
+    document.body.classList.add('first-launch');
+    
+    setupSwipeGestures();
+    setupScrollHeader();
+    
+    document.getElementById('main-app')?.classList.add('active');
+    document.getElementById('header').classList.remove('hidden');
+    document.getElementById('bottomNav').classList.remove('hidden');
+    
+    navigateTo('home');
+    startUpdates();
+    setDailyQuote();
+    startMotivationCycle();
+    setupSwipeGestures();
+    updateStats();
+    setTimeout(() => window.scrollTo(0, 0), 100);
+    
+    setTimeout(() => {
+        document.body.classList.remove('first-launch', 'main-app-enter');
+        isFirstLaunch = false;
+    }, 2500);
+}
+function navigateTo(page) {
+    // 유효한 페이지인지 확인
+    if (!pageOrder.includes(page)) {
+        console.error('Invalid page:', page);
+        return;
+    }
+    
+    const pages = {
+        'level': 'levelPage',
+        'savings': 'savingsPage',
+        'home': 'homePage',
+        'progress': 'progressPage',
+        'settings': 'settingsPage'
+    };
+    const titles = {
+        'level': '레벨',
+        'savings': '절약',
+        'home': '금연 도우미',
+        'progress': '진행 상황',
+        'settings': '설정'
+    };
+
+    const oldPageIndex = currentPageIndex;
+    currentPageIndex = pageOrder.indexOf(page);
+    
+    // 잘못된 인덱스 방지
+    if (currentPageIndex === -1) {
+        currentPageIndex = oldPageIndex;
+        return;
+    }
+    
+    const isSlideLeft = currentPageIndex > oldPageIndex;
+    
+    navigateToPage(pages[page], isSlideLeft);
+    document.getElementById('headerTitle').textContent = titles[page];
+    
+    document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+    const navItems = document.querySelectorAll('.nav-item');
+    if (navItems[currentPageIndex]) {
+        navItems[currentPageIndex].classList.add('active');
+    }
+    
+    setTimeout(() => window.scrollTo(0, 0), 50);
+}
+
+function navigateToPage(pageId, isSlideLeft = false) {
+    const currentPage = document.querySelector('.page.active');
+    const newPage = document.getElementById(pageId);
+    
+    if (currentPage) currentPage.classList.remove('active');
+    newPage.classList.add('active');
+}
+
+function startUpdates() {
+    updateStats();
+    if (updateInterval) clearInterval(updateInterval);
+    updateInterval = setInterval(updateStats, 1000);
+}
+
+function startMotivationCycle() {
+    if (motivationInterval) clearInterval(motivationInterval);
+    motivationInterval = setInterval(() => {
+        currentMotivationIndex = (currentMotivationIndex + 1) % motivationMessages.length;
+        const motivationEl = document.getElementById('motivationText');
+        if (motivationEl) {
+            motivationEl.style.animation = 'none';
+            setTimeout(() => {
+                motivationEl.textContent = motivationMessages[currentMotivationIndex];
+                motivationEl.style.animation = 'slideTextLeft 0.5s ease-in-out';
+            }, 50);
+        }
+    }, 5000);
+}
+
+function setupSwipeGestures() {
+    const appContainer = document.getElementById('app');
+    
+    // 기존 이벤트 리스너 제거를 위한 참조 저장
+    if (appContainer._swipeHandlers) {
+        appContainer.removeEventListener('touchstart', appContainer._swipeHandlers.start);
+        appContainer.removeEventListener('touchmove', appContainer._swipeHandlers.move);
+        appContainer.removeEventListener('touchend', appContainer._swipeHandlers.end);
+    }
+    
+    let startX = 0;
+    let startY = 0;
+    let moveX = 0;
+    let moveY = 0;
+    let isSwiping = false;
+    
+    const handleTouchStart = (e) => {
+        // 모달이나 SOS 버튼 등 특정 요소에서는 스와이프 비활성화
+        if (e.target.closest('.modal, .sos-button, .sos-modal-content, .breathing-modal-content, textarea, input')) {
+            return;
+        }
+        
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+        isSwiping = false;
+    };
+    
+    const handleTouchMove = (e) => {
+        if (!startX || !startY) return;
+        
+        moveX = e.touches[0].clientX;
+        moveY = e.touches[0].clientY;
+        
+        const diffX = Math.abs(moveX - startX);
+        const diffY = Math.abs(moveY - startY);
+        
+        // 가로 스와이프가 세로 스와이프보다 클 때만 활성화
+        if (diffX > diffY && diffX > 30) {
+            isSwiping = true;
+        }
+    };
+    
+    const handleTouchEnd = (e) => {
+        if (!isSwiping || !startX) {
+            startX = 0;
+            startY = 0;
+            isSwiping = false;
+            return;
+        }
+        
+        const endX = e.changedTouches[0].clientX;
+        const diff = startX - endX;
+        
+        // 최소 스와이프 거리 100px
+        if (Math.abs(diff) > 100) {
+            if (diff > 0) {
+                // 왼쪽으로 스와이프 -> 다음 페이지
+                navigateToNextPage();
+            } else {
+                // 오른쪽으로 스와이프 -> 이전 페이지
+                navigateToPrevPage();
+            }
+        }
+        
+        // 초기화
+        startX = 0;
+        startY = 0;
+        isSwiping = false;
+    };
+    
+    // 이벤트 리스너 등록
+    appContainer.addEventListener('touchstart', handleTouchStart, { passive: true });
+    appContainer.addEventListener('touchmove', handleTouchMove, { passive: true });
+    appContainer.addEventListener('touchend', handleTouchEnd, { passive: true });
+    
+    // 참조 저장 (나중에 제거할 수 있도록)
+    appContainer._swipeHandlers = {
+        start: handleTouchStart,
+        move: handleTouchMove,
+        end: handleTouchEnd
+    };
+}
+
+function setupScrollHeader() {
+    const header = document.getElementById('header');
+    let lastScrollTop = 0;
+    
+    // 모든 페이지에 스크롤 이벤트 추가
+    document.querySelectorAll('.page').forEach(page => {
+        page.addEventListener('scroll', function() {
+            const scrollTop = this.scrollTop;
+            
+            if (scrollTop > 20) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+            
+            // 스크롤 방향 감지 (아래로 스크롤 시 헤더 숨기기 옵션)
+            if (scrollTop > lastScrollTop && scrollTop > 100) {
+                header.classList.add('header-hide');
+            } else {
+                header.classList.remove('header-hide');
+            }
+            
+            lastScrollTop = scrollTop;
+        });
+    });
+}
+
+// SOS 기능 관련 변수
+let breathingInterval = null;
+let breathingCycle = 0;
+
+// 강력한 명언 목록
+const sosQuotes = [
+    {
+        text: "이 순간의 유혹은 5분이면 사라집니다. 5분만 참으세요. 당신은 할 수 있습니다!",
+        author: "금연 전문가"
+    },
+    {
+        text: "담배 한 개비가 당신의 모든 노력을 무너뜨릴 수 있습니다. 지금까지의 당신을 지켜주세요.",
+        author: "금연 도우미"
+    },
+    {
+        text: "이 고통은 일시적입니다. 하지만 금연의 성공은 평생입니다. 지금 이 순간을 이겨내세요!",
+        author: "마크 트웨인"
+    },
+    {
+        text: "담배를 피우고 싶은 마음은 파도와 같습니다. 밀려왔다가 반드시 빠져나갑니다. 조금만 기다리세요.",
+        author: "금연 심리학"
+    },
+    {
+        text: "당신은 이미 [시간]동안 금연했습니다. 이 귀중한 시간을 포기하지 마세요!",
+        author: "당신의 성과"
+    }
+];
+
+// SOS 모달 열기
+function showSOSModal() {
+    // 현재 금연 시간 계산
+    if (userData.quitDateTime) {
+        const now = new Date();
+        const diff = now - userData.quitDateTime;
+        const minutes = Math.floor(diff / 60000);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+        
+        const timeText = days > 0 ? `${days}일 ${hours % 24}시간` : 
+                        hours > 0 ? `${hours}시간 ${minutes % 60}분` : 
+                        `${minutes}분`;
+        
+        document.getElementById('sosModalBody').innerHTML = `
+    <div style="text-align: center;">
+        <div style="font-size: clamp(16px, 4.5vw, 18px); font-weight: 700; color: var(--primary); margin-bottom: clamp(12px, 3vw, 16px);">
+            잠깐! 생각해보세요
+        </div>
+        <div style="font-size: clamp(14px, 3.5vw, 16px); line-height: 1.6; margin-bottom: clamp(12px, 3vw, 16px);">
+            당신은 이미 <strong style="color: var(--primary);">${timeText}</strong> 동안<br>
+            금연에 성공하고 있습니다!
+        </div>
+        <div style="font-size: clamp(12px, 3vw, 14px); color: var(--text-secondary); line-height: 1.5;">
+            이 순간의 유혹은 약 5분이면 사라집니다.<br>
+            아래 도구들이 당신을 도울 것입니다.
+        </div>
+    </div>
+`;
+    } else {
+        document.getElementById('sosModalBody').innerHTML = `
+    <div style="text-align: center; font-size: clamp(14px, 3.5vw, 16px); line-height: 1.6;">
+        당신은 강한 사람입니다.<br>
+        이 순간의 유혹을 이겨낼 수 있습니다.<br>
+        아래 도구들을 사용해보세요.
+    </div>
+`;
+    }
+    
+    document.getElementById('sosModal').classList.add('active');
+    playNotificationSound();
+}
+
+// SOS 모달 닫기
+function closeSOSModal() {
+    document.getElementById('sosModal').classList.remove('active');
+    
+    // 위기 극복 축하 메시지
+    showAchievementNotification({
+        icon: '🎉',
+        title: '위기 극복!',
+        desc: '유혹을 이겨낸 당신은 정말 강합니다!'
+    }, 'sos');
+}
+
+// 심호흡 가이드 표시
+function showBreathingGuide() {
+    document.getElementById('sosModal').classList.remove('active');
+    document.getElementById('breathingModal').classList.add('active');
+    startBreathing();
+}
+
+// 심호흡 시작
+function startBreathing() {
+    breathingCycle = 0;
+    const circle = document.getElementById('breathingCircle');
+    const text = document.getElementById('breathingText');
+    const instruction = document.getElementById('breathingInstruction');
+    
+    function breatheCycle() {
+        // 들이쉬기 (4초)
+        text.textContent = '들이쉬기';
+        instruction.textContent = '코로 천천히 숨을 들이마시세요 (4초)';
+        circle.classList.remove('exhale');
+        circle.classList.add('inhale');
+        
+        setTimeout(() => {
+            // 참기 (4초)
+            text.textContent = '참기';
+            instruction.textContent = '숨을 잠시 멈추세요 (4초)';
+            
+            setTimeout(() => {
+                // 내쉬기 (4초)
+                text.textContent = '내쉬기';
+                instruction.textContent = '입으로 천천히 숨을 내쉬세요 (4초)';
+                circle.classList.remove('inhale');
+                circle.classList.add('exhale');
+                
+                setTimeout(() => {
+                    breathingCycle++;
+                    if (breathingCycle < 5) {
+                        breatheCycle();
+                    } else {
+                        text.textContent = '완료!';
+                        instruction.textContent = '심호흡을 완료했습니다. 기분이 나아졌나요?';
+                        circle.classList.remove('exhale');
+                        setTimeout(() => {
+                            stopBreathing();
+                            showSOSModal();
+                        }, 2000);
+                    }
+                }, 4000);
+            }, 4000);
+        }, 4000);
+    }
+    
+    breatheCycle();
+}
+
+// 심호흡 중지
+function stopBreathing() {
+    const circle = document.getElementById('breathingCircle');
+    circle.classList.remove('inhale', 'exhale');
+    document.getElementById('breathingModal').classList.remove('active');
+}
+
+// 강력한 명언 표시
+function showMotivationalQuote() {
+    let quote = sosQuotes[Math.floor(Math.random() * sosQuotes.length)];
+    
+    // 현재 금연 시간을 명언에 포함
+    if (quote.text.includes('[시간]') && userData.quitDateTime) {
+        const now = new Date();
+        const diff = now - userData.quitDateTime;
+        const minutes = Math.floor(diff / 60000);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+        
+        const timeText = days > 0 ? `${days}일 ${hours % 24}시간` : 
+                        hours > 0 ? `${hours}시간 ${minutes % 60}분` : 
+                        `${minutes}분`;
+        
+        quote.text = quote.text.replace('[시간]', timeText);
+    }
+    
+    document.getElementById('sosModalBody').innerHTML = `
+    <div style="text-align: center;">
+        <div style="font-size: clamp(36px, 10vw, 48px); margin-bottom: clamp(12px, 3vw, 20px);">💪</div>
+        <div style="font-size: clamp(15px, 4vw, 17px); font-weight: 600; line-height: 1.6; margin-bottom: clamp(12px, 3vw, 16px); color: var(--text);">
+            "${quote.text}"
+        </div>
+        <div style="font-size: clamp(12px, 3vw, 14px); color: var(--text-secondary); font-style: italic;">
+            - ${quote.author}
+        </div>
+    </div>
+`;
+}
+
+// 개인 메시지 표시
+function showPersonalMessage() {
+    const savedMessage = localStorage.getItem('personalSOSMessage');
+    
+    if (savedMessage) {
+        document.getElementById('sosModalBody').innerHTML = `
+    <div style="text-align: center;">
+        <div style="font-size: clamp(36px, 10vw, 48px); margin-bottom: clamp(12px, 3vw, 20px);">💌</div>
+        <div style="font-size: clamp(14px, 3.5vw, 16px); font-weight: 600; line-height: 1.6; color: var(--text); white-space: pre-wrap; max-height: 40vh; overflow-y: auto; padding: 0 10px;">
+${savedMessage}
+        </div>
+    </div>
+    <button class="modal-btn modal-btn-cancel" onclick="editPersonalMessage()" style="margin-top: clamp(12px, 3vw, 16px); width: 100%;">
+        메시지 수정하기
+    </button>
+`;
+    } else {
+        document.getElementById('sosModal').classList.remove('active');
+        document.getElementById('personalMessageModal').classList.add('active');
+    }
+}
+
+// 개인 메시지 수정
+function editPersonalMessage() {
+    const savedMessage = localStorage.getItem('personalSOSMessage');
+    document.getElementById('personalMessageInput').value = savedMessage || '';
+    document.getElementById('sosModal').classList.remove('active');
+    document.getElementById('personalMessageModal').classList.add('active');
+}
+
+// 개인 메시지 저장
+function savePersonalMessage() {
+    const message = document.getElementById('personalMessageInput').value.trim();
+    
+    if (!message) {
+        alert('메시지를 입력해주세요!');
+        return;
+    }
+    
+    localStorage.setItem('personalSOSMessage', message);
+    closePersonalMessageModal();
+    showSOSModal();
+    
+    // 저장 완료 메시지
+    setTimeout(() => {
+    document.getElementById('sosModalBody').innerHTML = `
+        <div style="text-align: center;">
+            <div style="font-size: clamp(36px, 10vw, 48px); margin-bottom: clamp(12px, 3vw, 20px);">✅</div>
+            <div style="font-size: clamp(14px, 3.5vw, 16px); font-weight: 600; color: var(--success); line-height: 1.6;">
+                나에게 쓴 편지가 저장되었습니다!<br>
+                위기의 순간에 다시 읽어보세요.
+            </div>
+        </div>
+    `;
+}, 100);
+}
+
+// 개인 메시지 모달 닫기
+function closePersonalMessageModal() {
+    document.getElementById('personalMessageModal').classList.remove('active');
+}
+
+
+
+function navigateToNextPage() {
+    const nextIndex = (currentPageIndex + 1) % pageOrder.length;
+    navigateTo(pageOrder[nextIndex]);
+}
+
+function navigateToPrevPage() {
+    const prevIndex = (currentPageIndex - 1 + pageOrder.length) % pageOrder.length;
+    navigateTo(pageOrder[prevIndex]);
+}
+
+function setDailyQuote() {
+    const today = new Date().toDateString();
+    const savedQuoteDate = localStorage.getItem('dailyQuoteDate');
+    
+    if (savedQuoteDate !== today) {
+        const todayQuote = dailyQuotes[Math.floor(Math.random() * dailyQuotes.length)];
+        localStorage.setItem('dailyQuote', JSON.stringify(todayQuote));
+        localStorage.setItem('dailyQuoteDate', today);
+    }
+    
+    const savedQuote = localStorage.getItem('dailyQuote');
+    if (savedQuote) {
+        const quote = JSON.parse(savedQuote);
+        const quoteTextEl = document.getElementById('dailyQuoteText');
+        const quoteAuthorEl = document.getElementById('dailyQuoteAuthor');
+        if (quoteTextEl) quoteTextEl.textContent = `"${quote.text}"`;
+        if (quoteAuthorEl) quoteAuthorEl.textContent = `- ${quote.author}`;
+    }
+}
+
+function updateStats() {
+    if (!userData.quitDateTime) return;
+    const now = new Date();
+    const diff = now - userData.quitDateTime;
+    if (diff < 0) {
+        document.getElementById('quitTime').textContent = '곧 시작';
+        return;
+    }
+
+    const minutes = Math.floor(diff / 60000);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    document.getElementById('quitTime').textContent = `${days}일 ${hours % 24}시간 ${minutes % 60}분`;
+    
+    const daysElapsed = diff / 86400000;
+    const savedMoney = Math.floor(daysElapsed * userData.packsPerDay * userData.pricePerPack);
+    document.getElementById('savedMoney').textContent = `${savedMoney.toLocaleString()}원`;
+    document.getElementById('totalSavings').textContent = `${savedMoney.toLocaleString()}원`;
+    
+    const cigarettesAvoided = Math.floor(daysElapsed * userData.packsPerDay * userData.cigarettesPerPack);
+    document.getElementById('cigarettesAvoided').textContent = `${cigarettesAvoided.toLocaleString()}개비`;
+
+    const lifeGained = cigarettesAvoided * 11;
+    document.getElementById('lifeGained').textContent = lifeGained > 1440 
+        ? `${(lifeGained/1440).toFixed(1)}일`
+        : lifeGained > 60 ? `${Math.floor(lifeGained/60)}시간` : `${lifeGained}분`;
+    
+    const maxMinutes = 5256000;
+    const healthImprovement = Math.min(Math.floor((minutes / maxMinutes) * 100), 100);
+    document.getElementById('healthImprovement').textContent = `${healthImprovement}%`;
+
+    updateLevel(minutes);
+    updateAchievements(minutes, savedMoney);
+    updateSavings(savedMoney);
+    updateSettings();
+    updateProgressSummary(minutes, savedMoney, healthImprovement);
+}
+
+function updateProgressSummary(minutes, savedMoney, healthProgress) {
+    let completedCount = milestones.filter(m => minutes >= m.minutes).length;
+    let unlockedSavings = savingsGoals.filter(g => (savedMoney / g.price) * 100 >= 100).length;
+    
+    const completedCountEl = document.getElementById('completedCount');
+    const unlockedSavingsEl = document.getElementById('unlockedSavings');
+    const healthProgressEl = document.getElementById('healthProgress');
+    
+    if (completedCountEl) completedCountEl.textContent = `${completedCount}개`;
+    if (unlockedSavingsEl) unlockedSavingsEl.textContent = `${unlockedSavings}개`;
+    if (healthProgressEl) healthProgressEl.textContent = `${healthProgress}%`;
+}
+
+function updateLevel(minutes) {
+    let currentLevel = 1, nextMilestone = null, prevMilestone = 0;
+    for (let milestone of milestones) {
+        if (minutes >= milestone.minutes) {
+            currentLevel = milestone.level;
+            prevMilestone = milestone.minutes;
+        } else {
+            nextMilestone = milestone;
+            break;
+        }
+    }
+
+    if (currentLevel > lastLevel && lastLevel > 0) {
+        const currentMilestone = milestones.find(m => m.level === currentLevel);
+        showAchievementNotification(currentMilestone, 'levelup');
+        schedulePushNotification(
+            `🎉 레벨 ${currentLevel} 달성!`,
+            `${currentMilestone.title} - ${currentMilestone.desc}`,
+            0
+        );
+    }
+    lastLevel = currentLevel;
+
+    document.getElementById('levelNumber').textContent = currentLevel;
+    document.getElementById('levelName').textContent = levelNames[currentLevel] || "금연왕";
+    
+    const currentLevelName = levelNames[currentLevel];
+    const nextLevelName = levelNames[currentLevel + 1] || "최고 레벨";
+    const currentLevelHomeEl = document.getElementById('currentLevelHome');
+    if (currentLevelHomeEl) {
+        currentLevelHomeEl.textContent = `${currentLevelName} Lv.${currentLevel}`;
+    }
+    
+    if (nextMilestone) {
+        const progress = Math.min(Math.floor(((minutes - prevMilestone) / (nextMilestone.minutes - prevMilestone)) * 100), 100);
+        document.getElementById('levelProgressBar').style.width = progress + '%';
+        document.getElementById('levelProgressText').textContent = `다음 레벨까지 ${progress}%`;
+        
+        const levelProgressMiniEl = document.getElementById('levelProgressMini');
+        if (levelProgressMiniEl) levelProgressMiniEl.style.width = progress + '%';
+        
+        const nextLevelHomeEl = document.getElementById('nextLevelHome');
+        if (nextLevelHomeEl) nextLevelHomeEl.textContent = `다음: ${nextLevelName}`;
+        
+        const remainingMinutes = nextMilestone.minutes - minutes;
+        const levelTimeRemainingEl = document.getElementById('levelTimeRemaining');
+        if (levelTimeRemainingEl) {
+            levelTimeRemainingEl.textContent = `남은 시간: ${formatTime(remainingMinutes)}`;
+        }
+    } else {
+        document.getElementById('levelProgressBar').style.width = '100%';
+        document.getElementById('levelProgressText').textContent = '최고 레벨 달성!';
+        
+        const levelProgressMiniEl = document.getElementById('levelProgressMini');
+        if (levelProgressMiniEl) levelProgressMiniEl.style.width = '100%';
+        
+        const nextLevelHomeEl = document.getElementById('nextLevelHome');
+        if (nextLevelHomeEl) nextLevelHomeEl.textContent = '최고 레벨 달성!';
+        
+        const levelTimeRemainingEl = document.getElementById('levelTimeRemaining');
+        if (levelTimeRemainingEl) levelTimeRemainingEl.textContent = '모든 레벨 완료!';
+    }
+}
+
+function formatTime(minutes) {
+    if (minutes < 60) return `${minutes}분`;
+    if (minutes < 1440) return `${Math.floor(minutes / 60)}시간`;
+    if (minutes < 43200) return `${Math.floor(minutes / 1440)}일`;
+    if (minutes < 525600) return `${Math.floor(minutes / 43200)}개월`;
+    return `${Math.floor(minutes / 525600)}년`;
+}
+function updateAchievements(minutes, savedMoney) {
+    let completedHTML = '', nextHTML = '', allHTML = '';
+    for (let milestone of milestones) {
+        const isCompleted = minutes >= milestone.minutes;
+        const timeText = formatTime(milestone.minutes);
+        
+        if (isCompleted && !achievedMilestones.has(milestone.level)) {
+            achievedMilestones.add(milestone.level);
+            showAchievementNotification(milestone, 'achievement');
+            schedulePushNotification(
+                `🏆 ${milestone.title} 달성!`,
+                milestone.desc,
+                0
+            );
+            saveDataSecure();
+        }
+        
+        if (isCompleted) {
+            completedHTML += createAchievementHTML(milestone, true, 100, timeText);
+            allHTML += createProgressAchievementHTML(milestone, true, 100);
+        } else {
+            if (!nextHTML) {
+                const remaining = milestone.minutes - minutes;
+                nextHTML = createAchievementHTML(milestone, false, 0, `${formatTime(remaining)} 남음`);
+            }
+            const progress = Math.min((minutes / milestone.minutes) * 100, 99);
+            allHTML += createProgressAchievementHTML(milestone, false, progress);
+        }
+    }
+
+    document.getElementById('completedAchievements').innerHTML = completedHTML ||
+    '<div style="text-align: center; color: var(--text-secondary); padding: 20px;">아직 달성한 업적이 없습니다</div>';
+    
+    document.getElementById('nextAchievement').innerHTML = nextHTML ||
+    '<div style="text-align: center; color: var(--text-secondary); padding: 20px;">모든 업적을 달성했습니다! 🎉</div>';
+    
+    document.getElementById('allAchievements').innerHTML = allHTML;
+}
+
+function createAchievementHTML(milestone, isCompleted, progress, timeText) {
+    const className = isCompleted ? 'completed' : '';
+    return `
+        <div class="achievement-item ${className}">
+            <div class="achievement-icon">${milestone.icon}</div>
+            <div class="achievement-content">
+                <div class="achievement-title">${milestone.title}</div>
+                <div class="achievement-desc">${milestone.desc}</div>
+                <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">
+                    ${isCompleted ? '✅ ' + timeText : '⏳ ' + timeText}
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function createProgressAchievementHTML(milestone, isCompleted, progress) {
+    const className = isCompleted ? 'completed' : (progress > 0 ? '' : 'locked');
+    return `
+        <div class="achievement-item ${className}">
+            <div class="achievement-icon">${milestone.icon}</div>
+            <div class="achievement-content">
+                <div class="achievement-title">${milestone.title}</div>
+                <div class="achievement-desc">${milestone.desc}</div>
+                <div class="achievement-progress">
+                    <div class="achievement-progress-fill" style="width: ${progress}%"></div>
+                </div>
+                <div style="text-align: right; font-size: 12px; font-weight: 700; color: var(--primary); margin-top: 4px;">
+                    ${Math.floor(progress)}%
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function updateSavings(savedMoney) {
+    let html = '';
+    for (let goal of savingsGoals) {
+        const progress = Math.min((savedMoney / goal.price) * 100, 100);
+        const isUnlocked = progress >= 100;
+        const className = isUnlocked ? 'unlocked' : '';
+        
+        if (isUnlocked && !unlockedSavingsGoals.has(goal.name)) {
+            unlockedSavingsGoals.add(goal.name);
+            showAchievementNotification(goal, 'savings');
+            schedulePushNotification(
+                `💰 ${goal.name} 달성!`,
+                `${goal.price.toLocaleString()}원을 절약했습니다!`,
+                0
+            );
+            saveDataSecure();
+        }
+        
+        html += `
+            <div class="savings-item ${className}">
+                <div class="savings-header">
+                    <div class="savings-emoji">${goal.emoji}</div>
+                    <div class="savings-info">
+                        <div class="savings-name">${goal.name}</div>
+                        <div class="savings-price">${goal.price.toLocaleString()}원</div>
+                    </div>
+                    ${isUnlocked ? '<div style="font-size: 24px;">✅</div>' : ''}
+                </div>
+                <div class="savings-progress-bar">
+                    <div class="savings-progress-fill" style="width: ${progress}%"></div>
+                </div>
+                <div class="savings-percent">${Math.floor(progress)}%</div>
+            </div>
+        `;
+    }
+    
+    document.getElementById('savingsItems').innerHTML = html;
+}
+
+function updateSettings() {
+    if (userData.userName) {
+        document.getElementById('profileName').textContent = userData.userName;
+    }
+    
+    if (userData.quitDateTime) {
+        const quitDate = new Date(userData.quitDateTime);
+        document.getElementById('quitStartDate').textContent = 
+            `${quitDate.getFullYear()}년 ${quitDate.getMonth() + 1}월 ${quitDate.getDate()}일 시작`;
+    }
+
+    if (userData.smokingYears && userData.packsPerDay) {
+        const riskLevel = userData.riskScore < 50 ? '낮음' : userData.riskScore < 150 ? '중간' : '높음';
+        const pastSmokingInfoHomeEl = document.getElementById('pastSmokingInfoHome');
+        if (pastSmokingInfoHomeEl) {
+            pastSmokingInfoHomeEl.textContent = 
+                `${userData.smokingYears}년간 하루 ${userData.packsPerDay}갑 (위험도: ${riskLevel})`;
+        }
+    }
+}
+
+function showPastSmokingInfo() {
+    if (!userData.smokingYears) return;
+    const riskLevel = userData.riskScore < 50 ? '낮은 위험도' : userData.riskScore < 150 ? '중간 위험도' : '높은 위험도';
+    const totalCigarettes = Math.floor(userData.smokingYears * 365 * userData.packsPerDay * userData.cigarettesPerPack);
+    const totalSpent = Math.floor(userData.smokingYears * 365 * userData.packsPerDay * userData.pricePerPack);
+    const details = `
+        <div style="text-align: left; line-height: 1.8;">
+            <strong>📊 흡연 통계</strong><br>
+            • 흡연 기간: ${userData.smokingYears}년<br>
+            • 하루 흡연량: ${userData.packsPerDay}갑<br>
+            • 월 평균 담배비: ${userData.monthlySpending?.toLocaleString() || 0}원<br><br>
+            
+            <strong>⚠️ 위험도 평가</strong><br>
+            • 위험 수준: <span style="color: ${userData.riskScore < 50 ? 'var(--success)' : userData.riskScore < 150 ? 'var(--warning)' : 'var(--danger)'}; font-weight: bold;">${riskLevel}</span><br><br>
+            
+            <strong>💰 과거 총 소비</strong><br>
+            • 총 흡연 개비: ${totalCigarettes.toLocaleString()}개비<br>
+            • 총 소비 금액: ${totalSpent.toLocaleString()}원<br><br>
+            
+            <strong>🎉 금연 성과</strong><br>
+            이제 이 모든 것을 극복하고 계십니다!
+        </div>
+    `;
+    
+    document.getElementById('pastSmokingDetails').innerHTML = details;
+    document.getElementById('pastSmokingModal').classList.add('active');
+}
+
+function closePastSmokingModal() {
+    document.getElementById('pastSmokingModal').classList.remove('active');
+}
+
+function resetQuit() {
+    if (!userData.quitDateTime) {
+        document.getElementById('resetModal').classList.add('active');
+        return;
+    }
+
+    // 현재까지의 성과 계산
+    const now = new Date();
+    const diff = now - userData.quitDateTime;
+    const minutes = Math.floor(diff / 60000);
+    const daysElapsed = diff / 86400000;
+    
+    const savedMoney = Math.floor(daysElapsed * userData.packsPerDay * userData.pricePerPack);
+    const cigarettesAvoided = Math.floor(daysElapsed * userData.packsPerDay * userData.cigarettesPerPack);
+    const lifeGained = cigarettesAvoided * 11;
+    
+    let lifeGainedText = '';
+    if (lifeGained > 1440) {
+        lifeGainedText = `${(lifeGained/1440).toFixed(1)}일`;
+    } else if (lifeGained > 60) {
+        lifeGainedText = `${Math.floor(lifeGained/60)}시간`;
+    } else {
+        lifeGainedText = `${lifeGained}분`;
+    }
+    
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    
+    // 긍정적인 메시지 생성
+    const motivationalMessage = `
+    <div style="text-align: center; line-height: 1.6;">
+        <div style="font-size: clamp(32px, 10vw, 48px); margin-bottom: clamp(8px, 2vw, 16px);">💪</div>
+        <div style="font-size: clamp(15px, 4vw, 18px); font-weight: 700; color: var(--primary); margin-bottom: clamp(10px, 2.5vw, 16px);">
+            실패가 아닌<br>다음 단계로 가는 잠시 멈춤입니다
+        </div>
+        <div style="background: var(--gradient-glow); padding: clamp(12px, 3vw, 20px); border-radius: 12px; margin-bottom: clamp(10px, 2.5vw, 16px);">
+            <div style="font-size: clamp(11px, 2.8vw, 14px); color: var(--text-secondary); margin-bottom: clamp(6px, 1.5vw, 12px);">
+                당신은 이 기간 동안
+            </div>
+            <div style="font-size: clamp(13px, 3.5vw, 16px); font-weight: 700; color: var(--primary);">
+                💰 ${savedMoney.toLocaleString()}원을 아꼈고<br>
+                ❤️ ${lifeGainedText}의 수명을 늘렸으며<br>
+                🚭 ${cigarettesAvoided.toLocaleString()}개비를 피우지 않았습니다
+            </div>
+        </div>
+        <div style="font-size: clamp(11px, 2.8vw, 14px); color: var(--text-secondary); line-height: 1.5;">
+            ${days}일간의 노력은 결코 사라지지 않습니다.<br>
+            다시 시작하는 것은 용기입니다.<br>
+            언제든지 다시 도전할 수 있습니다!
+        </div>
+    </div>
+`;
+    
+    document.getElementById('resetModalText').innerHTML = motivationalMessage;
+    document.getElementById('resetModal').classList.add('active');
+}
+
+function closeResetModal() {
+    document.getElementById('resetModal').classList.remove('active');
+}
+
+function confirmReset() {
+    ['quitSmokingData', 'quitSmokingData_backup', 'quitSmokingData_timestamp', 'dailyQuote', 'dailyQuoteDate', 'theme'].forEach(key => {
+        localStorage.removeItem(key);
+        sessionStorage.removeItem(key);
+    });
+    sessionStorage.removeItem('quitSmokingData_emergency');
+    
+    if (db) {
+        db.executeSql('DELETE FROM userData WHERE id = 1', [], 
+            () => console.log('SQLite data cleared'),
+            (error) => console.error('SQLite delete error:', error)
+        );
+    }
+    
+    if (updateInterval) clearInterval(updateInterval);
+    if (motivationInterval) clearInterval(motivationInterval);
+    
+    achievedMilestones.clear();
+    unlockedSavingsGoals.clear();
+    lastLevel = 0;
+    
+    userData = {};
+    location.reload();
+}
+
+function toggleDailyReminders() {
+    const isEnabled = localStorage.getItem('dailyRemindersEnabled') !== 'false';
+    const newState = !isEnabled;
+    
+    localStorage.setItem('dailyRemindersEnabled', newState.toString());
+    
+    const toggle = document.getElementById('reminderToggle');
+    if (newState) {
+        toggle.classList.add('active');
+        scheduleDailyReminders();
+    } else {
+        toggle.classList.remove('active');
+        // 일일 알림만 취소 (ID 1000번대)
+        if (window.cordova && window.cordova.plugins && window.cordova.plugins.notification) {
+            [1000, 1001, 1002].forEach(id => {
+                window.cordova.plugins.notification.local.cancel(id);
+            });
+        }
+    }
+}
+
+function testNotification() {
+    if (!window.cordova || !window.cordova.plugins || !window.cordova.plugins.notification) {
+        alert('알림 기능을 사용할 수 없습니다.');
+        return;
+    }
+    
+    window.cordova.plugins.notification.local.schedule({
+        id: 9999,
+        title: '🎉 알림 테스트',
+        text: '알림이 정상적으로 작동합니다!',
+        trigger: { in: 3, unit: 'second' },
+        foreground: true,
+        priority: 2,
+        vibrate: true,
+        sound: 'res://platform_default',
+        badge: 1
+    });
+    
+    alert('3초 후 테스트 알림이 표시됩니다.');
+}
+
+// 페이지 로드시 알림 토글 상태 복원
+function loadNotificationSettings() {
+    const isEnabled = localStorage.getItem('dailyRemindersEnabled') !== 'false';
+    const toggle = document.getElementById('reminderToggle');
+    if (toggle) {
+        if (isEnabled) {
+            toggle.classList.add('active');
+        } else {
+            toggle.classList.remove('active');
+        }
+    }
+}
+
+function showAchievementNotification(item, type) {
+    const overlay = document.getElementById('achievementOverlay');
+    const notification = document.getElementById('achievementNotification');
+    const icon = document.getElementById('achievementIcon');
+    const title = document.getElementById('achievementTitle');
+    const desc = document.getElementById('achievementDesc');
+    
+    if (type === 'levelup' || type === 'achievement') {
+        icon.textContent = item.icon;
+        title.textContent = type === 'levelup' ? `🎉 레벨 ${item.level} 달성!` : `🏆 ${item.title}`;
+        desc.textContent = item.desc;
+    } else if (type === 'savings') {
+        icon.textContent = item.emoji;
+        title.textContent = `💰 ${item.name} 달성!`;
+        desc.textContent = `${item.price.toLocaleString()}원을 절약했습니다!`;
+    }
+    
+    playNotificationSound();
+    
+    overlay.classList.add('show');
+    notification.classList.add('show');
+}
+
+function closeAchievementNotification() {
+    const overlay = document.getElementById('achievementOverlay');
+    const notification = document.getElementById('achievementNotification');
+    
+    overlay.classList.remove('show');
+    notification.classList.remove('show');
+}
+
+function playNotificationSound() {
+    try {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.frequency.value = 800;
+        oscillator.type = 'sine';
+        
+        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+        
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.5);
+    } catch (e) {
+        console.log('Audio not supported');
+    }
+}
+
+function initPushNotifications() {
+    if (!window.cordova || !window.cordova.plugins || !window.cordova.plugins.notification) {
+        console.log('Push notifications not available');
+        return;
+    }
+    
+    // 알림 권한 요청
+    window.cordova.plugins.notification.local.hasPermission(function(granted) {
+        if (!granted) {
+            // 권한이 없으면 요청
+            window.cordova.plugins.notification.local.requestPermission(function(granted) {
+                if (granted) {
+                    console.log('알림 권한이 승인되었습니다');
+                    setupNotifications();
+                } else {
+                    console.log('알림 권한이 거부되었습니다');
+                    alert('알림을 받으려면 설정에서 알림 권한을 허용해주세요.');
+                }
+            });
+        } else {
+            console.log('알림 권한이 이미 있습니다');
+            setupNotifications();
+        }
+    });
+    
+    // 알림 클릭 이벤트 처리
+    window.cordova.plugins.notification.local.on('click', function(notification) {
+        console.log('Notification clicked:', notification);
+        // 앱이 백그라운드에 있으면 포그라운드로 가져오기
+        if (userData.quitDateTime) {
+            updateStats();
+        }
+    });
+    
+    // 알림 트리거 이벤트 처리
+    window.cordova.plugins.notification.local.on('trigger', function(notification) {
+        console.log('Notification triggered:', notification);
+    });
+}
+
+function setupNotifications() {
+    // 기존 알림 모두 취소
+    window.cordova.plugins.notification.local.cancelAll(function() {
+        console.log('기존 알림 취소됨');
+        
+        // 새로운 알림 스케줄링
+        if (userData.quitDateTime) {
+            scheduleUpcomingMilestones();
+            scheduleDailyReminders();
+        }
+    });
+}
+
+function scheduleUpcomingMilestones() {
+    if (!window.cordova || !window.cordova.plugins || !window.cordova.plugins.notification) return;
+    if (!userData.quitDateTime) return;
+    
+    const now = new Date();
+    const diff = now - userData.quitDateTime;
+    const currentMinutes = Math.floor(diff / 60000);
+    
+    let notificationId = 1;
+    
+    // 다가오는 마일스톤 알림 예약
+    for (let milestone of milestones) {
+        if (milestone.minutes > currentMinutes) {
+            const triggerTime = new Date(userData.quitDateTime.getTime() + milestone.minutes * 60000);
+            
+            // 미래 시간인지 확인
+            if (triggerTime > now) {
+                window.cordova.plugins.notification.local.schedule({
+                    id: notificationId++,
+                    title: `🎉 ${milestone.title} 달성!`,
+                    text: milestone.desc,
+                    trigger: { at: triggerTime },
+                    foreground: true,
+                    priority: 2,
+                    vibrate: true,
+                    led: { color: '#6366f1', on: 500, off: 500 },
+                    icon: 'res://icon',
+                    smallIcon: 'res://ic_stat_notify',
+                    sound: 'res://platform_default',
+                    badge: 1,
+                    wakeup: true,
+                    launch: true
+                });
+                
+                console.log(`마일스톤 알림 예약: ${milestone.title} at ${triggerTime}`);
+            }
+        }
+    }
+}
+
+function scheduleDailyReminders() {
+    if (!window.cordova || !window.cordova.plugins || !window.cordova.plugins.notification) return;
+    
+    // 매일 오전 9시, 오후 3시, 저녁 9시에 격려 알림
+    const reminderTimes = [
+        { hour: 9, minute: 0, message: '좋은 아침입니다! 오늘도 금연 화이팅! 💪' },
+        { hour: 15, minute: 0, message: '잘하고 계십니다! 오후도 힘내세요! 🌟' },
+        { hour: 21, minute: 0, message: '오늘 하루도 금연 성공! 자랑스럽습니다! 🎉' }
+    ];
+    
+    let notificationId = 1000; // 마일스톤과 구분하기 위해 큰 숫자 사용
+    
+    reminderTimes.forEach(time => {
+        const now = new Date();
+        const triggerTime = new Date();
+        triggerTime.setHours(time.hour, time.minute, 0, 0);
+        
+        // 오늘 시간이 지났으면 내일로
+        if (triggerTime <= now) {
+            triggerTime.setDate(triggerTime.getDate() + 1);
+        }
+        
+        window.cordova.plugins.notification.local.schedule({
+            id: notificationId++,
+            title: '금연 도우미',
+            text: time.message,
+            trigger: { 
+                at: triggerTime,
+                every: 'day' // 매일 반복
+            },
+            foreground: true,
+            priority: 1,
+            vibrate: true,
+            icon: 'res://icon',
+            smallIcon: 'res://ic_stat_notify',
+            sound: 'res://platform_default',
+            wakeup: true,
+            launch: false // 클릭하지 않으면 앱 실행 안함
+        });
+    });
+    
+    console.log('일일 리마인더 예약 완료');
+}
+
+function schedulePushNotification(title, message, triggerTime) {
+    if (!window.cordova || !window.cordova.plugins || !window.cordova.plugins.notification) return;
+    
+    window.cordova.plugins.notification.local.schedule({
+        title: title,
+        text: message,
+        trigger: triggerTime instanceof Date ? { at: triggerTime } : { in: triggerTime, unit: 'second' },
+        foreground: true,
+        vibrate: true,
+        led: { color: '#6366f1', on: 500, off: 500 },
+        icon: 'res://icon',
+        smallIcon: 'res://ic_notification',
+        sound: 'file://sound.mp3'
+    });
+}
+
+function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    
+    const toggle = document.getElementById('themeToggle');
+    if (newTheme === 'dark') {
+        toggle.classList.add('active');
+    } else {
+        toggle.classList.remove('active');
+    }
+}
+
+function loadTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        const toggle = document.getElementById('themeToggle');
+        if (savedTheme === 'dark') {
+            toggle.classList.add('active');
+        }
+    }
+}
+
+function shareApp() {
+    if (navigator.share) {
+        navigator.share({
+            title: '금연 도우미',
+            text: '건강한 금연을 도와주는 앱입니다!',
+            url: window.location.href
+        }).catch(() => {});
+    } else {
+        navigator.clipboard.writeText(window.location.href).then(() => {
+            alert('링크가 클립보드에 복사되었습니다!');
+        }).catch(() => {});
+    }
+}
+
+function sendEmail() {
+    const subject = encodeURIComponent('금연 도우미 앱 피드백');
+    const body = encodeURIComponent('안녕하세요! 금연 도우미 앱에 대한 피드백을 보내드립니다.\n\n');
+    window.open(`mailto:developer@example.com?subject=${subject}&body=${body}`);
+}
+
+// js/index.js 파일 내부에 추가 (또는 사용자가 정의한 메인 JS 파일에 추가)
+
+document.addEventListener('deviceready', function () {
+    console.log("Cordova Device Ready");
+
+    // ==========================================================
+    // 🔔 [핵심] 알림 권한 요청 코드 (Android 13+ 대응)
+    // ==========================================================
+    if (cordova.plugins.notification.local) {
+        // 1. 권한 상태 확인
+        cordova.plugins.notification.local.hasPermission(function (granted) {
+            if (!granted) {
+                // 2. 권한이 없으면 요청 (이때 OS 팝업이 뜹니다)
+                cordova.plugins.notification.local.requestPermission(function (isGranted) {
+                    if (isGranted) {
+                        console.log("알림 권한 허용됨.");
+                    } else {
+                        console.warn("알림 권한 거부됨.");
+                        // "Alert 알림 기능을 사용할 수 없습니다" 메시지를 이 경우에 띄울 수 있습니다.
+                        alert("앱의 알림 기능을 사용하려면 설정에서 권한을 허용해야 합니다."); 
+                    }
+                });
+            } else {
+                console.log("알림 권한이 이미 허용되었습니다.");
+            }
+        });
+    } else {
+        // 플러그인 로드 실패 시 디버그 메시지
+        console.error("Local Notification Plugin is not available.");
+    }
+    // ==========================================================
+
+    // 이 외에 Device, SQLite 등 다른 플러그인을 초기화하는 코드를 여기에 추가하면 됩니다.
+
+}, false);
+</script>
+</body>
+</html>
